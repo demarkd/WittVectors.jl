@@ -3,6 +3,9 @@ uuid = "48053327-1795-489a-8ced-0c875cdc1a91"
 authors = ["David DeMark <demar180@umn.edu>"]
 version = "0.1.0"
 
+[deps]
+AbstractAlgebra = "c3fe647b-3220-5bb0-a1ea-a7954cac585d"
+
 [compat]
 julia = "1.6"
 
