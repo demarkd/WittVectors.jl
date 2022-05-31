@@ -1,24 +1,6 @@
-using WittVectors
-using Documenter
+push!(LOAD_PATH,"/home/ddm/code/julia/WittVectors/src")
+using Documenter, WittVectors, AbstractAlgebra
 
-DocMeta.setdocmeta!(WittVectors, :DocTestSetup, :(using WittVectors); recursive=true)
-
-makedocs(;
-    modules=[WittVectors],
-    authors="David DeMark <demar180@umn.edu>",
-    repo="https://github.com/demarkd/WittVectors.jl/blob/{commit}{path}#{line}",
-    sitename="WittVectors.jl",
-    format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://demarkd.github.io/WittVectors.jl",
-        assets=String[],
-    ),
-    pages=[
-        "Home" => "index.md",
-    ],
-)
-
-deploydocs(;
-    repo="github.com/demarkd/WittVectors.jl",
-    devbranch="main",
-)
+makedocs(
+	 modules = [WittVectors],
+	 sitename="WittVectors.jl Documentation")

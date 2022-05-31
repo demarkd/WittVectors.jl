@@ -1,14 +1,8 @@
-```@meta
-CurrentModule = WittVectors
-```
+# WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets
 
-# WittVectors
-
-Documentation for [WittVectors](https://github.com/demarkd/WittVectors.jl).
-
-```@index
-```
+## Parent and child object types
 
 ```@autodocs
 Modules = [WittVectors]
+Order = [:type, :function]
 ```
