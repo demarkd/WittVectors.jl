@@ -7,7 +7,7 @@ using Random: Random, SamplerTrivial, GLOBAL_RNG
 using RandomExtensions: RandomExtensions, Make2, AbstractRNG
 using Primes: isprime
 
-import AbstractAlgebra: parent_type, elem_type, base_ring, parent, is_domain_type, is_exact_type, canonical_unit, isequal, divexact, zero!, mul!, add!, addeq!, get_cached!, is_unit, characteristic, Ring, RingElem, expressify, truncate
+import AbstractAlgebra: parent_type, elem_type, base_ring, parent, is_domain_type, is_exact_type, canonical_unit, isequal, divexact, zero!, mul!, add!, addeq!, get_cached!, is_unit, characteristic, Ring, RingElem, expressify, truncate, isconstant
 #consider renaming truncate function to avoid adding new method to AbstractAlgebra.truncate (toQuotient?)
 import Base: show, +, -, *, ^, ==, inv, isone, iszero, one, zero, rand, deepcopy, deepcopy_internal, hash, parent
 
