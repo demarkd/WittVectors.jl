@@ -1,294 +1,57 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets · WittVectors.jl Documentation</title><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>WittVectors.jl Documentation</a></span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets</a><ul class="internal"><li><a class="tocitem" href="#Parent-and-child-objects-and-constructors"><span>Parent and child objects and constructors</span></a></li><li><a class="tocitem" href="#Data-type-and-parent-object-methods"><span>Data type and parent object methods</span></a></li><li><a class="tocitem" href="#Basic-Manipulation"><span>Basic Manipulation</span></a></li><li><a class="tocitem" href="#Binary-Operations"><span>Binary Operations</span></a></li><li><a class="tocitem" href="#Exact-Division"><span>Exact Division</span></a></li><li><a class="tocitem" href="#Comparison"><span>Comparison</span></a></li><li><a class="tocitem" href="#Truncation-Helpers"><span>Truncation Helpers</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/demarkd/WittVectors.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="WittVectors.jl:-An-implementation-of-big-Witt-vectors-supporting-truncation-over-arbitrary-divisor-stable-sets"><a class="docs-heading-anchor" href="#WittVectors.jl:-An-implementation-of-big-Witt-vectors-supporting-truncation-over-arbitrary-divisor-stable-sets">WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets</a><a id="WittVectors.jl:-An-implementation-of-big-Witt-vectors-supporting-truncation-over-arbitrary-divisor-stable-sets-1"></a><a class="docs-heading-anchor-permalink" href="#WittVectors.jl:-An-implementation-of-big-Witt-vectors-supporting-truncation-over-arbitrary-divisor-stable-sets" title="Permalink"></a></h1><ul><li><a href="#WittVectors.jl:-An-implementation-of-big-Witt-vectors-supporting-truncation-over-arbitrary-divisor-stable-sets">WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets</a></li><li class="no-marker"><ul><li><a href="#Parent-and-child-objects-and-constructors">Parent and child objects and constructors</a></li><li><a href="#Data-type-and-parent-object-methods">Data type and parent object methods</a></li><li><a href="#Basic-Manipulation">Basic Manipulation</a></li><li><a href="#Binary-Operations">Binary Operations</a></li><li><a href="#Exact-Division">Exact Division</a></li><li><a href="#Comparison">Comparison</a></li><li><a href="#Truncation-Helpers">Truncation Helpers</a></li></ul></li></ul><h2 id="Parent-and-child-objects-and-constructors"><a class="docs-heading-anchor" href="#Parent-and-child-objects-and-constructors">Parent and child objects and constructors</a><a id="Parent-and-child-objects-and-constructors-1"></a><a class="docs-heading-anchor-permalink" href="#Parent-and-child-objects-and-constructors" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="WittVectors.BigWittRing" href="#WittVectors.BigWittRing"><code>WittVectors.BigWittRing</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">mutable struct BigWittRing{T &lt;: RingElement} &lt;: Ring</code></pre><p>Parent object type for Big Witt Rings (i.e. truncated only by a maximum precision rather than a more general divisor-stable set). Should be constructed using the exported constructors, although I think it&#39;s basically safe to call WittVectors.BigWittRing directly.</p><pre><code class="nohighlight hljs">(W::BigWittRing{T})() where T &lt;: RingElement</code></pre><p>The basic constructor given a Witt Ring W. Identical to zero(W) (in fact the latter simply calls W())</p><p><strong>Example:</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using AbstractAlgebra;
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>WittVectors.jl: An implementation of Witt vectors over arbitrary truncation sets · WittVectors.jl</title><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>WittVectors.jl</a></span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>WittVectors.jl: An implementation of Witt vectors over arbitrary truncation sets</a><ul class="internal"><li><a class="tocitem" href="#Quick-Start-Guide"><span>Quick Start Guide</span></a></li></ul></li><li><a class="tocitem" href="fulldocs/">WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>WittVectors.jl: An implementation of Witt vectors over arbitrary truncation sets</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>WittVectors.jl: An implementation of Witt vectors over arbitrary truncation sets</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/demarkd/WittVectors.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="WittVectors.jl:-An-implementation-of-Witt-vectors-over-arbitrary-truncation-sets"><a class="docs-heading-anchor" href="#WittVectors.jl:-An-implementation-of-Witt-vectors-over-arbitrary-truncation-sets">WittVectors.jl: An implementation of Witt vectors over arbitrary truncation sets</a><a id="WittVectors.jl:-An-implementation-of-Witt-vectors-over-arbitrary-truncation-sets-1"></a><a class="docs-heading-anchor-permalink" href="#WittVectors.jl:-An-implementation-of-Witt-vectors-over-arbitrary-truncation-sets" title="Permalink"></a></h1><p>&lt;!–<a href="https://demarkd.github.io/WittVectors.jl/stable"><img src="https://img.shields.io/badge/docs-stable-blue.svg" alt="Stable"/></a>–&gt; <a href="https://demarkd.github.io/WittVectors.jl/dev"><img src="https://img.shields.io/badge/docs-dev-blue.svg" alt="Dev"/></a> <a href="https://github.com/demarkd/WittVectors.jl/actions/workflows/CI.yml?query=branch%3Amain"><img src="https://github.com/demarkd/WittVectors.jl/actions/workflows/CI.yml/badge.svg?branch=main" alt="Build Status"/></a></p><h2 id="Quick-Start-Guide"><a class="docs-heading-anchor" href="#Quick-Start-Guide">Quick Start Guide</a><a id="Quick-Start-Guide-1"></a><a class="docs-heading-anchor-permalink" href="#Quick-Start-Guide" title="Permalink"></a></h2><p>WittVectors.jl is designed to be used with <a href="https://nemocas.github.io/AbstractAlgebra.jl/dev/">AbstractAlgebra.jl</a>. Any time you will be using WittVectors either in the REPL or your own Julia script, call it using <code>using AbstractAlgebra, WittVectors</code>, as the base rings you will need are provided by that package. An exception is if you are only using base rings provided properly by another package in the family of related projects, such as <a href="http://nemocas.org/">Nemo.jl</a> or <a href="https://github.com/thofma/Hecke.jl/">Hecke.jl</a>, in which case you should load that package alongside WittVectors.jl.</p><h3 id="Parents-and-Children"><a class="docs-heading-anchor" href="#Parents-and-Children">Parents and Children</a><a id="Parents-and-Children-1"></a><a class="docs-heading-anchor-permalink" href="#Parents-and-Children" title="Permalink"></a></h3><p>Following the conventions and type structure of AbstractAlgebra.jl, WittVectors.jl Witt Vectors each &quot;live inside&quot; a parent object (which is not actually a set of objects so much as a container for compatibility data for their objects). WittVectors.jl provides two parent types, <code>BigWittRing</code> (which models the ring of Big Witt Vectors up to some user-supplied index) and <code>TruncatedBigWittRing</code> (which models the ring of Witt Vectors over a user-supplied truncation set) (n.b. the name of this object may soon change). There are three primary constructors for those parent objects: <code>BigWittVectorRing</code> creates a <code>BigWittRing</code> and <code>TruncatedBigWittVectorRing</code>, and <code>pTypicalBigWittVectorRing</code> both create a <code>TruncatedBigWittRing</code>.</p><h4 id="Example"><a class="docs-heading-anchor" href="#Example">Example</a><a id="Example-1"></a><a class="docs-heading-anchor-permalink" href="#Example" title="Permalink"></a></h4><pre><code class="language-julia-repl hljs">julia&gt; using WittVectors, AbstractAlgebra;
 
-julia&gt; using WittVectors;
+julia&gt; W1= BigWittVectorRing(GF(7), 25)
+Big Witt vector ring represented up to degree 25 over Finite field F_7
 
-julia&gt; W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
+julia&gt; typeof(W1)
+BigWittRing{AbstractAlgebra.GFElem{Int64}}
 
-julia&gt; w=W()
-BigInt[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+julia&gt; W2=TruncatedBigWittVectorRing(ZZ, [18, 25]) #Most convenient way to call this is with a list of generators for the truncation set
+Witt vector ring over Integers truncated over the set [1, 2, 3, 5, 6, 9, 18, 25]
 
-julia&gt; iszero(w)
-true</code></pre><p><strong>Constructors</strong></p><pre><code class="nohighlight hljs">(W::BigWittRing{T})(c::Integer) where T &lt;: RingElement
-(W::BigWittRing{T})(c::T) where T &lt;: RingElement</code></pre><p>Since there is no additive ring homomorphism R→W(R), calling <code>W(c)</code> for <code>c</code> an element of <code>R</code> returns the constant lift of <code>c</code>. This is more-or-less the only candidate for that functionality, but for that reason <code>W(c)</code> for <code>c</code> an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such <span>$F$</span> (to my knowledge) admit a natural transformation <span>$id ⟹  F$</span>, so in those cases calling <span>$FR(c)$</span> where <code>c</code> may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of <code>c</code> in the composition of structure maps <span>$Z→R→FR$</span>. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined <code>W(c)</code> to be the constant lift of the image of <code>c</code> in <span>$ZZ→R$</span>.</p><p><strong>Example:</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using WittVectors, AbstractAlgebra;
+julia&gt; typeof(W2)
+TruncatedBigWittRing{BigInt}
 
-julia&gt; W1=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
+julia&gt; W3=pTypicalWittVectorRing(QQ, 3, 4)
+Witt vector ring over Rationals truncated over the set [1, 3, 9, 27, 81]
 
-julia&gt; W1(256)
-BigInt[256, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+julia&gt; typeof(W3)
+TruncatedBigWittRing{Rational{BigInt}}
 
-julia&gt; W1(1)+W1(1)
-BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
+julia&gt; W4=TruncatedBigWittVectorRing(QQ, [3^4])
+Witt vector ring over Rationals truncated over the set [1, 3, 9, 27, 81]
 
-julia&gt; W1(2)
-BigInt[2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+julia&gt; W3==W4 #by default, calling a constructor twice for the same ring returns the same object-- even differing constructors for the same ring
+true
+</code></pre><p>&lt;details&gt; &lt;summary&gt; More on parent objects &lt;/summary&gt;</p><p>As demonstrated at the end of that example, [by default] parent objects are cached so that attempting to create a Witt vector ring isomorphic to an existing Witt vector ring does not create a duplicate. There are a few exceptions, at least for now. For one, <code>BigWittRing</code>s and <code>TruncatedBigWittRing</code>s are always unequal. In addition, [for now] <code>TruncatedBigWittRing</code> carries a <code>BigWittRing</code> as part of its data (the <code>untruncated</code> field). All of the exported constructors for <code>TrucnatedBigWittRing</code>s <code>W</code> ensure that <code>W.untruncated.prec</code> is the maximal member of its truncation set, but it&#39;s possible (a) that the previous statement is actually a lie in some edge case (which should be reported to the author(s) as a bug) or (b) to use an internal command to create a <code>TruncatedBigWittRing</code> not having this property (god knows why you would want to, swim at your own risk). &lt;/details&gt;</p><p>There are a few ways to create Witt vectors. For elements <span>$[c]$</span> of the set-theoretic constant lift <span>$R\to W(R)$</span>, one can use <code>W(c)</code>. This is in contrast to other functorial constructions <code>F</code> provided by AbstractAlgebra.jl where for an integer <code>n</code>, <code>F(R)(n)</code> is the image of <code>n</code> in the composition of the structure map and a natural transformation <span>$\mathrm{id}\implies F$</span>,  <span>$\mathbb{Z}\to R \to F(R)$</span>. We do not have such a natural transformation at our disposal. Instead, we can the image of <span>$n\in\mathbb{Z}$</span> in the structure map <span>$\mathbb{Z}\to W(R)$</span> by calling <span>$n*W(1)$</span>.</p><h3 id="Example-2"><a class="docs-heading-anchor" href="#Example-2">Example</a><a class="docs-heading-anchor-permalink" href="#Example-2" title="Permalink"></a></h3><pre><code class="language-julia-repl hljs">julia&gt; using WittVectors, AbstractAlgebra;
 
-julia&gt; W2=BigWittVectorRing(GF(7),10)
-Big Witt vector ring represented up to degree 10 over Finite field F_7
+julia&gt; a=W(6)
+AbstractAlgebra.GFElem{Int64}[6, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-julia&gt; W2(256)
-AbstractAlgebra.GFElem{Int64}[4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+julia&gt; b=W(-2)
+AbstractAlgebra.GFElem{Int64}[5, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-julia&gt; W3=BigWittVectorRing(AbsSeriesRing(GF(23),10),10)
-Big Witt vector ring represented up to degree 10 over Univariate power series ring in x over Finite field F_23
+julia&gt; c=6*W(1)
+AbstractAlgebra.GFElem{Int64}[6, 6, 0, 6, 0, 0, 1, 6, 0, 0]
 
-julia&gt; W3(256)
-AbstractAlgebra.Generic.AbsSeries{AbstractAlgebra.GFElem{Int64}}[3 + O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10)]
+julia&gt; d=W(1)*(-2)
+AbstractAlgebra.GFElem{Int64}[5, 4, 2, 5, 6, 3, 4, 5, 5, 5]
 
-</code></pre><p>The second one is possibly needed to prevent ambiguity, according to the <a href="https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/">ring interface</a> documentation for AbstractAlgebra.jl.</p><pre><code class="nohighlight hljs">(W::BigWittRing{T})(c::T) where T &lt;: RingElement</code></pre><p>This is the constant lift <span>$R→W(R)$</span>, which is multiplicative but not additive.</p><pre><code class="language-julia-repl hljs">julia&gt; using WittVectors, AbstractAlgebra;
-
-julia&gt; Qx, x=PolynomialRing(QQ,&quot;x&quot;);
-
-julia&gt; f=x^3+x+1;
-
-julia&gt; W=BigWittVectorRing(Qx, 10);
-
-julia&gt; W(f)
-AbstractAlgebra.Generic.Poly{Rational{BigInt}}[x^3 + x + 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]</code></pre><pre><code class="nohighlight hljs">(W::BigWittRing{T})(A::Vector{T}) where T &lt;: RingElem
-(W::BigWittRing)(A::Vector)</code></pre><p>Additional constructor to create a Witt vector by supplying its coordinates. Will return an error if supplied more coordinates than <code>W.prec</code> </p><pre><code class="language-julia-repl hljs">julia&gt; using AbstractAlgebra, WittVectors;
-
-julia&gt; W=BigWittVectorRing(ZZ,8);
-
-julia&gt; X=[1,2,3,4,5,6,7,8];
-
-julia&gt; Y=[1,2,3,4];
-
-julia&gt; Z=[1,2,3,4,5,6,7,8,9];
-
-julia&gt; w=W(X)
-BigInt[1, 2, 3, 4, 5, 6, 7, 8]
-
-julia&gt; parent(w)
-Big Witt vector ring represented up to degree 8 over Integers
-
-julia&gt; W(Y)
-Warning: not enough coordinates given, filling in with zeros
-BigInt[1, 2, 3, 4, 0, 0, 0, 0]
-
-julia&gt; W(Z)
-Warning: more coordinates given than allowable precision, throwing out all terms past W.prec=8
-BigInt[1, 2, 3, 4, 5, 6, 7, 8]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L15-L115">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.WittVector" href="#WittVectors.WittVector"><code>WittVectors.WittVector</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">mutable struct WittVector{T &lt;: RingElement} &lt;: RingElem</code></pre><p>Object type for Big Witt Vectors, i.e. child objcets of <code>BigWittRing{T}</code>s. DO NOT CONSTRUCT USING <code>WittVectors.WittVector{T}(coords, prec)</code>, this will produce an orphan Witt Vector which you would then have to assign a parent to directly. Parent-child compatibility is geneerally unchecked, so no lifeguard on duty. Rather, construct the constructors at <a href="#WittVectors.BigWittRing"><code>BigWittRing</code></a>. </p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L128-L131">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.BigWittVectorRing" href="#WittVectors.BigWittVectorRing"><code>WittVectors.BigWittVectorRing</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">BigWittVectorRing(R::Ring, n::Integer, cached::Bool=true)</code></pre><p>Main constructor for creating rings of Witt vectors. Returns parent object for the ring of Witt vectors over the base ring <code>R</code> up to degree <code>n</code>. The optional <code>cached</code> argument determines whether to cache the returned object, so that calling the same constructor with the same arguments <code>R,n</code> twice returns the same object and hence child objects will be compatible–no life guard on duty if you call <code>BigWittVectorRing</code> with <code>cached==false</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L647-L651">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.TruncatedBigWittRing" href="#WittVectors.TruncatedBigWittRing"><code>WittVectors.TruncatedBigWittRing</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">mutable struct TruncatedBigWittRing{T &lt;: RingElement} &lt;: Ring</code></pre><p>Parent object for truncated rings of Witt vectors. Contains two fields, <code>untruncated::BigWittRing{T}</code> which is the underlying ring (prior to quotient) and <code>truncationset::Vector{Bool}</code> which determines which indices are kept in the truncation. <code>truncationset</code> should be the same length as <code>untruncated.prec</code>.</p><p><strong>Constructors</strong></p><pre><code class="nohighlight hljs">function (W::TruncatedBigWittRing{T})() where T &lt;: RingElement
-function (W::TruncatedBigWittRing{T})(c::Integer) where T &lt;: RingElement
-function (W::TruncatedBigWittRing{T})(c::T) where T &lt;: Integer
-function (W::TruncatedBigWittRing{T})(c::T) where T &lt;: RingElement</code></pre><p>Each of these mirror the functionality in the untruncated case.</p><pre><code class="nohighlight hljs">function (W::TruncatedBigWittRing{T})(A::Vector{T}) where T &lt;: RingElem</code></pre><p>Return a Witt vector with coordinates specified by <code>A</code>. <code>A</code> can be the length of <code>W.truncationset</code> (i.e. <code>W.untruncated.prec</code> in which case it will ignore the entries of <code>A</code> ignored by <code>W</code> or it can be length equal to the number of <code>true</code> entries in <code>W.truncationset</code>, in which case it will fill in the missing (irrelevant) entries with zero. </p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using AbstractAlgebra, WittVectors;
-
-julia&gt; W=pTypicalWittVectorRing(GF(3),2,3)
-Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8]
-
-julia&gt; w=W([2,1,0,2])
-AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
-
-julia&gt; w1=W([2,1,1,0,1,1,1,2])
-AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
-
-julia&gt; w==w1
+julia&gt; a*b==W(-12)
 true
 
-julia&gt; w1.xcoords #note the bogus entries are killed
-8-element Vector{AbstractAlgebra.GFElem{Int64}}:
- 2
- 1
- 0
- 0
- 0
- 0
- 0
- 2</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L3-L42">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.TruncatedWittVector" href="#WittVectors.TruncatedWittVector"><code>WittVectors.TruncatedWittVector</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">mutable struct TruncatedWittVector{T &lt;: RingElement} &lt;: RingElem</code></pre><p>Child type for truncated Witt vectors. Contains three fields, <code>xcoords::Vector{T}</code> which are its coordinates (INCLUDING indices not in the truncation set), <code>truncationset::Vector{Bool}</code> and <code>parent::TruncatedBigWittRing{T}</code>. <code>truncationset</code> and <code>parent.truncationset</code> should match.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L56-L59">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.TruncatedBigWittVectorRing" href="#WittVectors.TruncatedBigWittVectorRing"><code>WittVectors.TruncatedBigWittVectorRing</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">function TruncatedBigWittVectorRing(R::Ring, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true)</code></pre><p>Return a ring of Witt vectors over the base ring <code>R</code> truncated by the truncation set <code>S</code>. </p><p>Similarly to the corresponding untruncated constructor, the <code>cached</code> argument determines whether to add the created ring to the parent types dictionary. Recommended this is always true unless you really know what you are doing. The <code>stabilize</code> option determines whether to replace the truncation set <code>S</code> with <code>divisor_stabilize(S)</code>. One can expect a slight speedup if called with <code>stabilize=false</code> the first time the ring is created, but this will induce unexpected behavior (namely it will in all likelihood break the associativity of the <code>+</code> and <code>*</code> operators) if <code>S</code> is not divisor-stable to begin with. Recommended you call with <code>stabilize=true</code> (the default option if no argument specified) unless you are creating a great number of Witt rings at once with truncation sets you know to be divisor-stable and need the speedup. The resulting object <code>W</code> will have <code>W.untruncated.prec</code> equal to the length of the supplied truncation set. Recommended the last entry of <code>S</code> is true in order to optimize performance and decrease the chances of creating functionally identical parent objects which are unequal.</p><pre><code class="nohighlight hljs">function TruncatedBigWittVectorRing(R::Ring, Ns::Vector{Int}, cached::Bool=true, stabilize::Bool=true)</code></pre><p>Same as above except now taking an integer-vector argument.</p><pre><code class="nohighlight hljs">function TruncatedBigWittVectorRing(W::BigWittRing, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true)</code></pre><p>Return <code>TruncatedBigWittVectorRing(W.base_ring, S, cached, stabilize)</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L588-L599">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.pTypicalWittVectorRing" href="#WittVectors.pTypicalWittVectorRing"><code>WittVectors.pTypicalWittVectorRing</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">function pTypicalWittVectorRing(R::Ring, p::Integer, m::Integer,cached::Bool=true)</code></pre><p>Specialized version of the <code>TruncatedBigWittVectorRing</code> to create <span>$W_{p^m}(R)$</span>, the ring of <code>p</code>-typical Witt vectors represented up to entry <code>p^m</code>. Resulting object <code>W</code> will have <code>W.untruncated.prec</code> equal to <code>p^m</code>.</p><p><strong>Example:</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using AbstractAlgebra, WittVectors;
-
-julia&gt; W=pTypicalWittVectorRing(GF(3),2,3)
-Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8]
-
-julia&gt; w=W([2,1,0,2])
-AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
-
-julia&gt; w1=W([2,1,1,0,1,1,1,2])
-AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
-
-julia&gt; w==w1
-true
-
-julia&gt; w1.xcoords
-8-element Vector{AbstractAlgebra.GFElem{Int64}}:
- 2
- 1
- 0
- 0
- 0
- 0
- 0
- 2</code></pre><pre><code class="nohighlight hljs">pTypicalWittVectorRing(W::BigWittRing, p::Integer, m::Integer, cached::Bool=true)</code></pre><p>Return <code>pTypicalWittVectorRing(base_ring(W), p, m, cached)</code> </p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L610-L643">source</a></section></article><h2 id="Data-type-and-parent-object-methods"><a class="docs-heading-anchor" href="#Data-type-and-parent-object-methods">Data type and parent object methods</a><a id="Data-type-and-parent-object-methods-1"></a><a class="docs-heading-anchor-permalink" href="#Data-type-and-parent-object-methods" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="AbstractAlgebra.parent_type-Union{Tuple{Type{WittVector{T}}}, Tuple{T}} where T&lt;:RingElement" href="#AbstractAlgebra.parent_type-Union{Tuple{Type{WittVector{T}}}, Tuple{T}} where T&lt;:RingElement"><code>AbstractAlgebra.parent_type</code></a> — <span class="docstring-category">Method</span></header><section><div><p><strong>Data type and parent object methods</strong></p><pre><code class="nohighlight hljs">parent_type(::Type{WittVector{T}}) where T &lt;: RingElement
-elem_type (::Type{WittVector{T}}) where T &lt;: RingElement
-base_ring(R::BigWittRing)
-parent(R::WittVector)
-is_domain_type(::Type{WittVector{T}}) where T &lt;: RingElement
-is_exact_type(::Type{WittVector{T}}) where T &lt;: RingElement
-hash(w::WittVector, h::UInt)
-deepcopy_internal(w::WittVector{T}, d::IdDict) where T &lt;: RingElement</code></pre><p>Standard components of any conformant ring implementation in AbstractAlgebra.jl. See the documentation <a href="https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/">there</a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L186-L197">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.project" href="#WittVectors.project"><code>WittVectors.project</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">project(w::WittVector{T}, n::Integer=1) where T &lt;: RingElement
-project(w::TruncatedWittVector{T}, n::Integer=1) where T &lt;: RingElement = w.xcoords[n]</code></pre><p>Return the <code>n</code>th coordinate of <code>w</code>. Defaults to the projection to the first coordinate, which happens to be a ring homomorphism. </p><p><strong>Example</strong></p><pre><code class="language-jldocstring hljs">julia&gt; using WittVectors, AbstractAlgebra;
-
-julia&gt; W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
-
-julia&gt; w=2*W(1)
-BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
-
-julia&gt; q=W([8,4,7,5,6,11,12,13,14,15])
-BigInt[8, 4, 7, 5, 6, 11, 12, 13, 14, 15]
-
-julia&gt; project(w)
-2
-
-julia&gt; project(w)*project(q)==project(w*q)
-true
-
-julia&gt; project(w,2)
--1
-
-julia&gt; project(w,2)*project(q,2)==project(w*q,2)
-false</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L251-L280">source</a></section><section><div><pre><code class="language-julia hljs">project(w::WittVector{T}, n::Integer=1) where T &lt;: RingElement
-project(w::TruncatedWittVector{T}, n::Integer=1) where T &lt;: RingElement = w.xcoords[n]</code></pre><p>Return the <code>n</code>th coordinate of <code>w</code>. Defaults to the projection to the first coordinate, which happens to be a ring homomorphism. </p><p><strong>Example</strong></p><pre><code class="language-jldocstring hljs">julia&gt; using WittVectors, AbstractAlgebra;
-
-julia&gt; W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
-
-julia&gt; w=2*W(1)
-BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
-
-julia&gt; q=W([8,4,7,5,6,11,12,13,14,15])
-BigInt[8, 4, 7, 5, 6, 11, 12, 13, 14, 15]
-
-julia&gt; project(w)
-2
-
-julia&gt; project(w)*project(q)==project(w*q)
-true
-
-julia&gt; project(w,2)
--1
-
-julia&gt; project(w,2)*project(q,2)==project(w*q,2)
-false</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L251-L280">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.ghostmap-Tuple{WittVector, Any}" href="#WittVectors.ghostmap-Tuple{WittVector, Any}"><code>WittVectors.ghostmap</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">ghostmap(w::WittVector{T}, n) where T &lt;: RingElem
-ghostmap(w::TruncatedWittVector{T}, n) where T &lt;: RingElem</code></pre><p>The ghost map <span>$W(R)→R$</span>. </p><p>Defined by the formula <span>$ω_n([w_1, w_2, w_3,…]) = ∑_{d∣n} dw_d^{(n/d)}$</span>. A ring homomorphism for every <code>n</code>, provided the underlying precision is large enough (will throw an error or behave unexpectedly otherwise)</p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using AbstractAlgebra, WittVectors;
-
-
-julia&gt; W=BigWittVectorRing(ZZ, 10)
-Big Witt vector ring represented up to degree 10 over Integers
-
-
-julia&gt; w=W([10,9,8,7,6,5,4,3,2,1]);
-
-
-julia&gt; q=W([2,4,6,8,10,1,3,5,7,9]);
-
-
-julia&gt; z= w*q
-BigInt[20, 508, 6208, 34768, 1000492, -22549456, 30000596, -7151889450, -750372466, -4628706858520]
-
-
-julia&gt; ghostmap(z, 2)
-1416
-
-
-julia&gt; ghostmap(z,9)
-1223001900542
-
-
-julia&gt; ghostmap(w,2)*ghostmap(q,2)==ghostmap(z,2)
-true
-
-
-julia&gt; ghostmap(w,9)*ghostmap(q,9)==ghostmap(z,9)
-true
-</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L285-L326">source</a></section></article><h2 id="Basic-Manipulation"><a class="docs-heading-anchor" href="#Basic-Manipulation">Basic Manipulation</a><a id="Basic-Manipulation-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Manipulation" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="Base.zero" href="#Base.zero"><code>Base.zero</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">zero(W::BigWittRing)
-one(W::BigWittRing)
-isone(w::WittVector)
-iszero(w::WittVector)</code></pre><p>More standard ring interface functions. Check the documentation for AbstractAlgebra.jl&#39;s <a href="https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/">generic ring interface</a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L202-L208">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="AbstractAlgebra.isconstant" href="#AbstractAlgebra.isconstant"><code>AbstractAlgebra.isconstant</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">function isconstant(w::WittVector)</code></pre><p>Returns true if w is in the image of the constant lift set map R→W(R) (better known by another name, but we are avoiding the Nazi associations (somewhat unavoidable in the case of Ernst Witt)).</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L229-L232">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="AbstractAlgebra.is_unit-Tuple{WittVector}" href="#AbstractAlgebra.is_unit-Tuple{WittVector}"><code>AbstractAlgebra.is_unit</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">function is_unit(w::WittVector)</code></pre><p>Returns true if w is known to be a unit. Known being the operative word here–outside of special cases like W_p(Z/p), I do not really know a good way to know whether a given Witt vector is a unit. This functionality may be expanded in the future (but perhaps do not hold your breath).</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L243-L246">source</a></section></article><h2 id="Binary-Operations"><a class="docs-heading-anchor" href="#Binary-Operations">Binary Operations</a><a id="Binary-Operations-1"></a><a class="docs-heading-anchor-permalink" href="#Binary-Operations" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="Base.:*" href="#Base.:*"><code>Base.:*</code></a> — <span class="docstring-category">Function</span></header><section><div><p><strong>Z-algebra Structure</strong></p><pre><code class="nohighlight hljs">*(w::WittVector{T}, c::Integer) where T &lt;: RingElement</code></pre><p>Since there is no additive ring homomorphism R→W(R), calling W(c) for c an element of R returns the constant lift of c. This is more-or-less the only candidate for that functionality, but for that reason W(c) for c an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such F (to my knowledge) admit a natural transformation id ⟹F, so in those cases calling FR(c) where c may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of c in the composition of structure maps Z→R→FR. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined W(c) to be the constant lift of the image of c in Z→R. Thus, in particular, for a Witt Vector w∈W, W(2)*w ≂̸ w+w (again, unlike other functorial ring constructions in Julia). To compensate, an additional method has been added to the multiplication function * to accept mixed arguments.</p><p><strong>Example:</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using AbstractAlgebra;
-
-julia&gt; using WittVectors;
-
-julia&gt; W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
-
-julia&gt; w=one(W)
-BigInt[1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-julia&gt; x=W(2)*w
-BigInt[2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-julia&gt; y=2*w
-BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
-
-julia&gt; x==w+w
+julia&gt; a+b == W(4)
 false
 
-julia&gt; y==w+w
+julia&gt; c*d == (-12)*W(1)
 true
 
-julia&gt; z=w*2
-BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
-
-julia&gt; z==w+w
+julia&gt; c+d == 4 *W(1)
 true
 
-julia&gt; t=(-2)*w
-BigInt[-2, -3, 2, -9, 6, -4, 18, -93, 54, -72]
+julia&gt; e=3* (a +c) #multiplying by integers works for more than just W(1)
+AbstractAlgebra.GFElem{Int64}[1, 3, 0, 4, 0, 6, 2, 4, 0, 1]
 
-julia&gt; t + w + w == 0
-true</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L400-L440">source</a></section></article><h2 id="Exact-Division"><a class="docs-heading-anchor" href="#Exact-Division">Exact Division</a><a id="Exact-Division-1"></a><a class="docs-heading-anchor-permalink" href="#Exact-Division" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="AbstractAlgebra.divexact-Union{Tuple{T}, Tuple{WittVector{T}, WittVector{T}}} where T&lt;:RingElement" href="#AbstractAlgebra.divexact-Union{Tuple{T}, Tuple{WittVector{T}, WittVector{T}}} where T&lt;:RingElement"><code>AbstractAlgebra.divexact</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">divexact(w::WittVector{T}, v::WittVector{T}; check::Bool=true) where T &lt;: RingElement
-inv(w::WittVector)</code></pre><p>These are effectively not implemented–it has exactly what it needs to in order not to fail the conformance tests, which is to say that if v=W(1), divexact(w,v) returns w. Otherwise, it returns an error. Like everything else having to do with units in the ring of Big Witt Vectors, this may be expanded eventually, but no promises.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/WittVectors.jl#L473-L477">source</a></section></article><h2 id="Comparison"><a class="docs-heading-anchor" href="#Comparison">Comparison</a><a id="Comparison-1"></a><a class="docs-heading-anchor-permalink" href="#Comparison" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="Base.:==" href="#Base.:=="><code>Base.:==</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">function ==(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T&lt;: RingElement</code></pre><p>Return true if and only if <code>w</code> and <code>v</code> have the same parent and <code>w[i]==v[i]</code> for <code>i ∈ w.truncationset</code> (equivelently <code>i ∈ v.truncationset</code>). In general any <code>TruncatedWittVector</code> constructed normally will have zeros for those entries anyway, but in the event this property is somehow broken, that will be invisible to <code>==</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L381-L384">source</a></section></article><h2 id="Truncation-Helpers"><a class="docs-heading-anchor" href="#Truncation-Helpers">Truncation Helpers</a><a id="Truncation-Helpers-1"></a><a class="docs-heading-anchor-permalink" href="#Truncation-Helpers" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="WittVectors.truncationbools" href="#WittVectors.truncationbools"><code>WittVectors.truncationbools</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">function truncationbools(X::Vector{Int},n::Int)</code></pre><p>Return vector of booleans corresponding to a truncationset given as a <code>Vector</code>, <code>Array</code> or <code>Matrix</code> of integers. Unexpected results may occur if supplied a matrix with both dimensions exceeding 1. The second argument <code>n</code> specifies the length of the returned vector. <code>n</code> should exceed the largest member of <code>X</code>, will throw an index error otherwise. </p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L152-L155">source</a></section><section><div><pre><code class="nohighlight hljs">function truncationbools(X)</code></pre><p>Alias for <code>trunationbools(X,n)</code> where <code>n</code> is the maximal member of <code>X</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L178-L181">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.truncationlist" href="#WittVectors.truncationlist"><code>WittVectors.truncationlist</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">function truncationlist(S::Vector{Bool})</code></pre><p>Return a list of integers representing the truncationset given its representation as a boolean vector.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L185-L188">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="WittVectors.divisor_stabilize" href="#WittVectors.divisor_stabilize"><code>WittVectors.divisor_stabilize</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">function divisor_stabilize(S::Vector{Bool})</code></pre><p>Return a divisor-stable truncationset (as a <code>Vector{Bool}</code>) generated by its argument. For now a very slow and naive implementation, but hardly performance-critical.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using WittVectors;
-
-julia&gt; using AbstractAlgebra;
-
-julia&gt; S=zeros(Bool, 36);
-
-julia&gt; S[36]=true
-true
-
-julia&gt; S
-36-element Vector{Bool}:
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- ⋮
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 1
-
-julia&gt; divisor_stabilize(S)
-36-element Vector{Bool}:
- 1
- 1
- 1
- 1
- 0
- 1
- 0
- 0
- 1
- 0
- ⋮
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 1
-</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L193-L254">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="Base.truncate" href="#Base.truncate"><code>Base.truncate</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">truncate(W::BigWittRing, S::Vector{Bool})</code></pre><p>Return a <code>TruncatedBigWittVectorRing</code> <code>W_new</code> with <code>W_new.untruncated</code> being <code>W</code>, truncated by <code>S</code>.  </p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L656-L659">source</a></section><section><div><pre><code class="nohighlight hljs">function truncate(w::WittVector, S::Vector{Bool})</code></pre><p>Return the image of <code>w</code> in the quotient map <span>$W(R)→W_S(R)$</span>. Parent object will be <code>truncate(w.parent, S)</code></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/demarkd/WittVectors.jl/blob/42287852841168781a1a8e2172da4048b671f870/src/Truncated.jl#L661-L664">source</a></section></article><ul><li><a href="#WittVectors.BigWittRing"><code>WittVectors.BigWittRing</code></a></li><li><a href="#WittVectors.TruncatedBigWittRing"><code>WittVectors.TruncatedBigWittRing</code></a></li><li><a href="#WittVectors.TruncatedWittVector"><code>WittVectors.TruncatedWittVector</code></a></li><li><a href="#WittVectors.WittVector"><code>WittVectors.WittVector</code></a></li><li><a href="#AbstractAlgebra.divexact-Union{Tuple{T}, Tuple{WittVector{T}, WittVector{T}}} where T&lt;:RingElement"><code>AbstractAlgebra.divexact</code></a></li><li><a href="#AbstractAlgebra.is_unit-Tuple{WittVector}"><code>AbstractAlgebra.is_unit</code></a></li><li><a href="#AbstractAlgebra.isconstant"><code>AbstractAlgebra.isconstant</code></a></li><li><a href="#AbstractAlgebra.parent_type-Union{Tuple{Type{WittVector{T}}}, Tuple{T}} where T&lt;:RingElement"><code>AbstractAlgebra.parent_type</code></a></li><li><a href="#Base.:*"><code>Base.:*</code></a></li><li><a href="#Base.:=="><code>Base.:==</code></a></li><li><a href="#Base.truncate"><code>Base.truncate</code></a></li><li><a href="#Base.zero"><code>Base.zero</code></a></li><li><a href="#WittVectors.BigWittVectorRing"><code>WittVectors.BigWittVectorRing</code></a></li><li><a href="#WittVectors.TruncatedBigWittVectorRing"><code>WittVectors.TruncatedBigWittVectorRing</code></a></li><li><a href="#WittVectors.divisor_stabilize"><code>WittVectors.divisor_stabilize</code></a></li><li><a href="#WittVectors.ghostmap-Tuple{WittVector, Any}"><code>WittVectors.ghostmap</code></a></li><li><a href="#WittVectors.pTypicalWittVectorRing"><code>WittVectors.pTypicalWittVectorRing</code></a></li><li><a href="#WittVectors.project"><code>WittVectors.project</code></a></li><li><a href="#WittVectors.truncationbools"><code>WittVectors.truncationbools</code></a></li><li><a href="#WittVectors.truncationlist"><code>WittVectors.truncationlist</code></a></li></ul></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.18 on <span class="colophon-date" title="Wednesday 1 June 2022 23:42">Wednesday 1 June 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+julia&gt; e== a+ a + a + c + c + c
+true</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="fulldocs/">WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.18 on <span class="colophon-date" title="Wednesday 1 June 2022 23:58">Wednesday 1 June 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
