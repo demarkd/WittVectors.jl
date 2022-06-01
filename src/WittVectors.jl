@@ -74,18 +74,6 @@ end
 ```jldoctest
 julia> using AbstractAlgebra, Hecke, WittVectors;
 
-Welcome to 
-
-    _    _           _
-   | |  | |         | |
-   | |__| | ___  ___| | _____
-   |  __  |/ _ \/ __| |/ / _ \
-   | |  | |  __/ (__|   <  __/
-   |_|  |_|\___|\___|_|\_\___|
-    
-Version 0.14.2 ... 
- ... which comes with absolutely no warranty whatsoever
-(c) 2015-2021 by Claus Fieker, Tommy Hofmann and Carlo Sircana
 
 
 julia> Qx,x = PolynomialRing(Hecke.QQ, "x")
@@ -101,7 +89,7 @@ julia> W=BigWittVectorRing(R,8)
 Big Witt vector ring represented up to degree 8 over Number field over Rational Field with defining polynomial x^3 + x + 1
 
 julia> W(a+2)
-nf_elem[a + 2, 0, 0, 0, 0, 0, 0, 0]
+Nemo.nf_elem[a + 2, 0, 0, 0, 0, 0, 0, 0]
 ```
 ```@meta
 DocTestSetup = nothing
