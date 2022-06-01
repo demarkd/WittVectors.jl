@@ -11,7 +11,7 @@ import AbstractAlgebra: parent_type, elem_type, base_ring, parent, is_domain_typ
 #consider renaming truncate function to avoid adding new method to AbstractAlgebra.truncate (toQuotient?)
 import Base: show, +, -, *, ^, ==, inv, isone, iszero, one, zero, rand, deepcopy, deepcopy_internal, hash, parent
 
-export BigWittRing, BigWittVectorRing, WittVector, TruncatedBigWittRing, TruncatedWittVector, TruncatedBigWittVectorRing, pTypicalWittVectorRing, truncate, isconstant, zero, one, isone, iszero, truncationbools, truncationlist, divisor_stabilize
+export BigWittRing, BigWittVectorRing, WittVector, TruncatedBigWittRing, TruncatedWittVector, TruncatedBigWittVectorRing, pTypicalWittVectorRing, truncate, isconstant, zero, one, isone, iszero, truncationbools, truncationlist, divisor_stabilize, project
 @doc raw"""
 	mutable struct BigWittRing{T <: RingElement} <: Ring
 Parent object type for Big Witt Rings (i.e. truncated only by a maximum precision rather than a more general divisor-stable set). Should be constructed using the exported constructors, although I think it's basically safe to call WittVectors.BigWittRing directly.
@@ -39,15 +39,19 @@ true
 Since there is no additive ring homomorphism R→W(R), calling `W(c)` for `c` an element of `R` returns the constant lift of `c`. This is more-or-less the only candidate for that functionality, but for that reason `W(c)` for `c` an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such ``F`` (to my knowledge) admit a natural transformation ``id ⟹  F``, so in those cases calling ``FR(c)`` where `c` may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of `c` in the composition of structure maps ``Z→R→FR``. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined `W(c)` to be the constant lift of the image of `c` in ``ZZ→R``.
 ## Example: 
 ```jldoctest
-julia> using WittVectors;
-
-julia> using AbstractAlgebra;
+julia> using WittVectors, AbstractAlgebra;
 
 julia> W1=BigWittVectorRing(ZZ,10)
 Big Witt vector ring represented up to degree 10 over Integers
 
 julia> W1(256)
 BigInt[256, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+julia> W1(1)+W1(1)
+BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
+
+julia> W1(2)
+BigInt[2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 julia> W2=BigWittVectorRing(GF(7),10)
 Big Witt vector ring represented up to degree 10 over Finite field F_7
@@ -60,6 +64,8 @@ Big Witt vector ring represented up to degree 10 over Univariate power series ri
 
 julia> W3(256)
 AbstractAlgebra.Generic.AbsSeries{AbstractAlgebra.GFElem{Int64}}[3 + O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10)]
+
+
 ```
 The second one is possibly needed to prevent ambiguity, according to the [ring interface](https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/) documentation for AbstractAlgebra.jl.
 
@@ -142,18 +148,6 @@ include("Truncated.jl")
 #####################################
 #Data type and parent object methods#
 #####################################
-"""
-## Data type and parent object methods
-	parent_type(::Type{WittVector{T}}) where T <: RingElement
-	elem_type (::Type{WittVector{T}}) where T <: RingElement
-	base_ring(R::BigWittRing)
-	parent(R::WittVector)
-	is_domain_type(::Type{WittVector{T}}) where T <: RingElement
-	is_exact_type(::Type{WittVector{T}}) where T <: RingElement
-	hash(w::WittVector, h::UInt)
-	deepcopy_internal(w::WittVector{T}, d::IdDict) where T <: RingElement
-Standard components of any conformant ring implementation in AbstractAlgebra.jl. See the documentation [there](https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/)
-"""
 parent_type(::Type{WittVector{T}}) where T <: RingElement = BigWittRing{T}
 
 elem_type(::Type{BigWittRing{T}}) where T <: RingElement = WittVector{T}
@@ -188,6 +182,19 @@ function deepcopy_internal(w::WittVector{T},d::IdDict) where T <: RingElement
 	return r
 end
 
+"""
+## Data type and parent object methods
+	parent_type(::Type{WittVector{T}}) where T <: RingElement
+	elem_type (::Type{WittVector{T}}) where T <: RingElement
+	base_ring(R::BigWittRing)
+	parent(R::WittVector)
+	is_domain_type(::Type{WittVector{T}}) where T <: RingElement
+	is_exact_type(::Type{WittVector{T}}) where T <: RingElement
+	hash(w::WittVector, h::UInt)
+	deepcopy_internal(w::WittVector{T}, d::IdDict) where T <: RingElement
+Standard components of any conformant ring implementation in AbstractAlgebra.jl. See the documentation [there](https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/)
+"""
+parent_type, elem_type, base_ring, parent, is_domain_type, is_exact_type, hash, deepcopy_internal
 ####################
 #Basic manipulation#
 ####################
@@ -233,13 +240,45 @@ function isone(w::WittVector)
 	return isone(X[1])*prod(iszero(X[i]) for i in 2:n)
 end
 """
-	is_unit(w::WittVector)
+	function is_unit(w::WittVector)
 Returns true if w is known to be a unit. Known being the operative word here--outside of special cases like W_p(Z/p), I do not really know a good way to know whether a given Witt vector is a unit. This functionality may be expanded in the future (but perhaps do not hold your breath).
 """
 function is_unit(w::WittVector)
 	println("WARNING: checking if a Witt Vector is a unit, but I don't actually know how to implement it--this will return false negatives for units other than [1]")
 	return isone(w)
 end
+"""
+	project(w::WittVector{T}, n::Integer=1) where T <: RingElement
+	project(w::TruncatedWittVector{T}, n::Integer=1) where T <: RingElement = w.xcoords[n] 
+Return the `n`th coordinate of `w`. Defaults to the projection to the first coordinate, which happens to be a ring homomorphism. 
+## Example
+```jldocstring
+julia> using WittVectors, AbstractAlgebra;
+
+julia> W=BigWittVectorRing(ZZ,10)
+Big Witt vector ring represented up to degree 10 over Integers
+
+julia> w=2*W(1)
+BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
+
+julia> q=W([8,4,7,5,6,11,12,13,14,15])
+BigInt[8, 4, 7, 5, 6, 11, 12, 13, 14, 15]
+
+julia> project(w)
+2
+
+julia> project(w)*project(q)==project(w*q)
+true
+
+julia> project(w,2)
+-1
+
+julia> project(w,2)*project(q,2)==project(w*q,2)
+false
+```
+"""
+project(w::WittVector{T}, n::Integer=1) where T <: RingElement = w.xcoords[n] 
+project(w::TruncatedWittVector{T}, n::Integer=1) where T <: RingElement = w.xcoords[n] 
 		
 #is_unit(w::WittVector)#TODO honestly I don't even know a characterization of units in W(R). probably should figure out if there's a well-known one. Obviously, requires that w.xcoords[1] is a unit--is that all though? certainly the case for series rings, but these obviously do not work in exact analogy.
 #characteristic(R::BigWittRing) #TODO same basically

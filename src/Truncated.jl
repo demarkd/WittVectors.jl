@@ -28,7 +28,7 @@ AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
 julia> w==w1
 true
 
-julia> w1.xcoords
+julia> w1.xcoords #note the bogus entries are killed
 8-element Vector{AbstractAlgebra.GFElem{Int64}}:
  2
  1

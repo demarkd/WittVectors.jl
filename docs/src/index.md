@@ -21,7 +21,8 @@ pTypicalWittVectorRing
 
 ## Data type and parent object methods
 ```@docs
-divexact(w::WittVector{T}, v::WittVector{T}; check::Bool=true) where T <: RingElement
+parent_type(::Type{WittVector{T}}) where T <: RingElement
+project
 ```
 
 ## Basic Manipulation
@@ -37,7 +38,7 @@ is_unit(w::WittVector)
 
 ## Exact Division
 ```@docs
-parent_type(::Type{WittVector{T}}) where T <: RingElement
+divexact(w::WittVector{T}, v::WittVector{T}; check::Bool=true) where T <: RingElement
 ```
 
 ## Comparison
