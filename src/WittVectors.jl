@@ -2,11 +2,11 @@ module WittVectors
 
 
 using AbstractAlgebra
-using Hecke
+#using Hecke
 using Random: Random, SamplerTrivial, GLOBAL_RNG
 using RandomExtensions: RandomExtensions, Make2, AbstractRNG
 using Primes: isprime
-using Documenter
+#using Documenter
 import AbstractAlgebra: parent_type, elem_type, base_ring, parent, is_domain_type, is_exact_type, canonical_unit, isequal, divexact, zero!, mul!, add!, addeq!, get_cached!, is_unit, characteristic, Ring, RingElem, expressify, truncate, isconstant
 #consider renaming truncate function to avoid adding new method to AbstractAlgebra.truncate (toQuotient?)
 import Base: show, +, -, *, ^, ==, inv, isone, iszero, one, zero, rand, deepcopy, deepcopy_internal, hash, parent
@@ -67,27 +67,45 @@ The second one is possibly needed to prevent ambiguity, according to the [ring i
 	(W::BigWittRing{T})(c::T) where T <: RingElement
 This is the constant lift ``R→W(R)``, which is multiplicative but not additive.
 ```jldoctest
-julia> using AbstractAlgebra, Hecke, WittVectors; 
+julia> using WittVectors, AbstractAlgebra;
 
+julia> Qx, x=PolynomialRing(QQ,"x");
 
+julia> f=x^3+x+1;
 
-julia> Qx,x = PolynomialRing(Hecke.QQ, "x")
-(Univariate Polynomial Ring in x over Rational Field, x)
+julia> W=BigWittVectorRing(Qx, 10);
 
-julia> f=x^3+x+1
-x^3 + x + 1
-
-julia> R, a=Hecke.NumberField(f, 'a', cached=true, check=true)
-(Number field over Rational Field with defining polynomial x^3 + x + 1, a)
-
-julia> W=BigWittVectorRing(R,8)
-Big Witt vector ring represented up to degree 8 over Number field over Rational Field with defining polynomial x^3 + x + 1
-
-julia> W(a+2)
-Nemo.nf_elem[a + 2, 0, 0, 0, 0, 0, 0, 0]
+julia> W(f)
+AbstractAlgebra.Generic.Poly{Rational{BigInt}}[x^3 + x + 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ```
 	(W::BigWittRing{T})(A::Vector{T}) where T <: RingElem
+	(W::BigWittRing)(A::Vector)
 Additional constructor to create a Witt vector by supplying its coordinates. Will return an error if supplied more coordinates than `W.prec` 
+```jldoctest
+julia> using AbstractAlgebra, WittVectors;
+
+julia> W=BigWittVectorRing(ZZ,8);
+
+julia> X=[1,2,3,4,5,6,7,8];
+
+julia> Y=[1,2,3,4];
+
+julia> Z=[1,2,3,4,5,6,7,8,9];
+
+julia> w=W(X)
+BigInt[1, 2, 3, 4, 5, 6, 7, 8]
+
+julia> parent(w)
+Big Witt vector ring represented up to degree 8 over Integers
+
+julia> W(Y)
+Warning: not enough coordinates given, filling in with zeros
+BigInt[1, 2, 3, 4, 0, 0, 0, 0]
+
+julia> W(Z)
+Warning: more coordinates given than allowable precision, throwing out all terms past W.prec=8
+BigInt[1, 2, 3, 4, 5, 6, 7, 8]
+```
 """
 mutable struct BigWittRing{T <: RingElement} <: Ring
 	base_ring::Ring
@@ -103,7 +121,7 @@ end
 const WittVectorID=AbstractAlgebra.CacheDictType{Tuple{Ring,Int},Ring}()
 """
 	mutable struct WittVector{T <: RingElement} <: RingElem
-Object type for Big Witt Vectors, i.e. child objcets of BigWittRing{T}s. DO NOT CONSTRUCT USING WittVectors.WittVector{T}(coords, prec), this will produce an orphan Witt Vector which you would then have to assign a parent to directly. Parent-child compatibility is geneerally unchecked, so no lifeguard on duty. Rather, construct with constructors below. 
+Object type for Big Witt Vectors, i.e. child objcets of `BigWittRing{T}`s. DO NOT CONSTRUCT USING `WittVectors.WittVector{T}(coords, prec)`, this will produce an orphan Witt Vector which you would then have to assign a parent to directly. Parent-child compatibility is geneerally unchecked, so no lifeguard on duty. Rather, construct the constructors at [`BigWittRing`](@ref). 
 """
 mutable struct WittVector{T <: RingElement} <: RingElem
 	xcoords::Vector{T}
@@ -522,6 +540,18 @@ function (W::BigWittRing{T})(A::Vector{T}) where T <: RingElem
 	r=deepcopy(zero(W))
 	r.xcoords=A[1:n]
 	return r
+end
+function (W::BigWittRing)(A::Vector) 
+	R=base_ring(W)
+	length(A)>W.prec && println("Warning: more coordinates given than allowable precision, throwing out all terms past W.prec=$(W.prec)")
+	W.prec>length(A) && println("Warning: not enough coordinates given, filling in with zeros")
+	#AR=broadcast(R,A)
+	#return W(AR)
+	w=deepcopy(zero(W))
+	for i in 1:min(W.prec,length(A))
+		w.xcoords[i]=R(A[i])
+	end
+	return w
 end
 
 function (W::BigWittRing{T})(w::WittVector{T}) where T <: RingElement
