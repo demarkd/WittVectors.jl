@@ -21,22 +21,18 @@ Parent object type for Big Witt Rings (i.e. truncated only by a maximum precisio
 The basic constructor given a Witt Ring W. Identical to zero(W) (in fact the latter simply calls W())
 #### Example:
 ```jldoctest
-julia> using AbstractAlgebra; W=BigWittVectorRing(ZZ,10)
-ERROR: UndefVarError: BigWittVectorRing not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+julia> using AbstractAlgebra;
+
+julia> using WittVectors;
+
+julia> W=BigWittVectorRing(ZZ,10)
+Big Witt vector ring represented up to degree 10 over Integers
 
 julia> w=W()
-ERROR: UndefVarError: W not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+BigInt[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 julia> iszero(w)
-ERROR: UndefVarError: w not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+true
 ```
 ### Constructors
 	(W::BigWittRing{T})(c::Integer) where T <: RingElement
