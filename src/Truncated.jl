@@ -325,7 +325,7 @@ end
 #############
 """
 	function ==(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T<: RingElement
-Return true if and only if `w` and `v` have the same parent and `w[i]==v[i]`` for `i ∈ w.truncationset` (equivelently `i ∈ v.truncationset`). In general any `TruncatedWittVector` constructed normally will have zeros for those entries anyway, but in the event this property is somehow broken, that will be invisible to `==`.
+Return true if and only if `w` and `v` have the same parent and `w[i]==v[i]` for `i ∈ w.truncationset` (equivelently `i ∈ v.truncationset`). In general any `TruncatedWittVector` constructed normally will have zeros for those entries anyway, but in the event this property is somehow broken, that will be invisible to `==`.
 """
 function ==(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T<: RingElement
 	parent(w) != parent(v) && error("Incompatible Rings")
@@ -522,10 +522,12 @@ end
 Return a ring of Witt vectors over the base ring `R` truncated by the truncation set `S`. 
 
 Similarly to the corresponding untruncated constructor, the `cached` argument determines whether to add the created ring to the parent types dictionary. Recommended this is always true unless you really know what you are doing. The `stabilize` option determines whether to replace the truncation set `S` with `divisor_stabilize(S)`. One can expect a slight speedup if called with `stabilize=false` the first time the ring is created, but this will induce unexpected behavior (namely it will in all likelihood break the associativity of the `+` and `*` operators) if `S` is not divisor-stable to begin with. Recommended you call with `stabilize=true` (the default option if no argument specified) unless you are creating a great number of Witt rings at once with truncation sets you know to be divisor-stable and need the speedup. The resulting object `W` will have `W.untruncated.prec` equal to the length of the supplied truncation set. Recommended the last entry of `S` is true in order to optimize performance and decrease the chances of creating functionally identical parent objects which are unequal.
+
     function TruncatedBigWittVectorRing(R::Ring, Ns::Vector{Int}, cached::Bool=true, stabilize::Bool=true)
 Same as above except now taking an integer-vector argument.
+
     function TruncatedBigWittVectorRing(W::BigWittRing, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true)
-Return `TruncatedBigWittVectorRing(W.base_ring, S, cached, stabilize).
+Return `TruncatedBigWittVectorRing(W.base_ring, S, cached, stabilize)`.
 """
 function TruncatedBigWittVectorRing(R::Ring, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true)
 	T=elem_type(R)
@@ -540,8 +542,9 @@ end
 """
     function pTypicalWittVectorRing(R::Ring, p::Integer, m::Integer,cached::Bool=true)
 Specialized version of the `TruncatedBigWittVectorRing` to create ``W_{p^m}(R)``, the ring of `p`-typical Witt vectors represented up to entry `p^m`. Resulting object `W` will have `W.untruncated.prec` equal to `p^m`.
+
     pTypicalWittVectorRing(W::BigWittRing, p::Integer, m::Integer, cached::Bool=true)
-Return `pTypicalWittVectorRing(base_ring(W), p, m, cached) 
+Return `pTypicalWittVectorRing(base_ring(W), p, m, cached)` 
 """
 function pTypicalWittVectorRing(R::Ring, p::Integer, m::Integer,cached::Bool=true)
 	 ~isprime(p) && error("nonprime p") 

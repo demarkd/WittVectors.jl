@@ -6,7 +6,7 @@
 BigWittRing
 WittVector
 BigWittVectorRing
-TruncatedBigWitRing
+TruncatedBigWittRing
 TruncatedWittVector
 TruncatedBigWittVectorRing
 pTypicalWittVectorRing
@@ -14,14 +14,14 @@ pTypicalWittVectorRing
 
 ## Data type and parent object methods
 ```@docs
-parent_type
+AbstractAlgebra.parent_type :: Union{Tuple{Type{WittVector{T}}}, Tuple{T}} where T<:AbstractAlgebra.RingElement
 ```
 
 ## Basic Manipulation
 ```@docs
 zero
 isconstant
-is_unit
+AbstractAlgebra.is_unit :: Tuple{WittVector}
 ```
 ## Binary Operations
 ```@docs
@@ -30,7 +30,7 @@ is_unit
 
 ## Exact Division
 ```@docs
-divexact
+AbstractAlgebra.divexact :: Union{Tuple{T}, Tuple{WittVector{T}, WittVector{T}}} where T<:AbstractAlgebra.RingElement
 ```
 
 ## Comparison
