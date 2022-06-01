@@ -324,7 +324,7 @@ true
 
 ```
 """
-ghostmap(w::WittVector{T}, n) where T <: RingElem, ghostmap(w::TruncatedWittVector{T}, n) where T <: RingElem
+ghostmap(w::WittVector, n), ghostmap(w::TruncatedWittVector, n)
 ################
 #Canonical Unit#
 ################
