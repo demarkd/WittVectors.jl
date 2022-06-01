@@ -21,7 +21,7 @@ Parent object type for Big Witt Rings (i.e. truncated only by a maximum precisio
 The basic constructor given a Witt Ring W. Identical to zero(W) (in fact the latter simply calls W())
 #### Example:
 ```jldoctest
-julia> W=BigWittVectorRing(ZZ,10)
+julia> using AbstractAlgebra; W=BigWittVectorRing(ZZ,10)
 Big Witt vector ring represented up to degree 10 over Integers
 
 julia> w=W()
@@ -36,7 +36,7 @@ Since there is no additive ring homomorphism R→W(R), calling `W(c)` for `c` an
 #### Example: 
 ```jldoctest
 
-julia> W1=BigWittVectorRing(ZZ,10)
+julia> using AbstractAlgebra; W1=BigWittVectorRing(ZZ,10)
 Big Witt vector ring represented up to degree 10 over Integers
 
 julia> W1(256)
