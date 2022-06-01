@@ -11,7 +11,7 @@ import AbstractAlgebra: parent_type, elem_type, base_ring, parent, is_domain_typ
 #consider renaming truncate function to avoid adding new method to AbstractAlgebra.truncate (toQuotient?)
 import Base: show, +, -, *, ^, ==, inv, isone, iszero, one, zero, rand, deepcopy, deepcopy_internal, hash, parent
 
-export BigWittRing, BigWittVectorRing, WittVector, TruncatedBigWittRing, TruncatedWittVector, TruncatedBigWittVectorRing, pTypicalWittVectorRing, truncate, isconstant, zero, one, isone, iszero, truncationbools, truncationlist, divisor_stabilize, project
+export BigWittRing, BigWittVectorRing, WittVector, TruncatedBigWittRing, TruncatedWittVector, TruncatedBigWittVectorRing, pTypicalWittVectorRing, truncate, isconstant, zero, one, isone, iszero, truncationbools, truncationlist, divisor_stabilize, project, ghostmap
 @doc raw"""
 	mutable struct BigWittRing{T <: RingElement} <: Ring
 Parent object type for Big Witt Rings (i.e. truncated only by a maximum precision rather than a more general divisor-stable set). Should be constructed using the exported constructors, although I think it's basically safe to call WittVectors.BigWittRing directly.
@@ -145,6 +145,7 @@ end
 include("algorithms/wittseries.jl")
 include("algorithms/getcoords.jl")
 include("Truncated.jl")
+include("algorithms/GhostMaps.jl")
 #####################################
 #Data type and parent object methods#
 #####################################
@@ -194,7 +195,7 @@ end
 	deepcopy_internal(w::WittVector{T}, d::IdDict) where T <: RingElement
 Standard components of any conformant ring implementation in AbstractAlgebra.jl. See the documentation [there](https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/)
 """
-parent_type, elem_type, base_ring, parent, is_domain_type, is_exact_type, hash, deepcopy_internal
+parent_type(::Type{WittVector{T}}) where T <: RingElement, elem_type, base_ring, parent, is_domain_type, is_exact_type, hash, deepcopy_internal
 ####################
 #Basic manipulation#
 ####################
@@ -277,11 +278,53 @@ julia> project(w,2)*project(q,2)==project(w*q,2)
 false
 ```
 """
+project(w::WittVector{T}, n::Integer=1) where T <: RingElement, project(w::TruncatedWittVector{T}, n::Integer=1) where T <: RingElement
 project(w::WittVector{T}, n::Integer=1) where T <: RingElement = w.xcoords[n] 
 project(w::TruncatedWittVector{T}, n::Integer=1) where T <: RingElement = w.xcoords[n] 
-		
-#is_unit(w::WittVector)#TODO honestly I don't even know a characterization of units in W(R). probably should figure out if there's a well-known one. Obviously, requires that w.xcoords[1] is a unit--is that all though? certainly the case for series rings, but these obviously do not work in exact analogy.
-#characteristic(R::BigWittRing) #TODO same basically
+
+"""
+	ghostmap(w::WittVector{T}, n) where T <: RingElem
+	ghostmap(w::TruncatedWittVector{T}, n) where T <: RingElem
+The ghost map ``W(R)→R``. 
+
+Defined by the formula ``ω_n([w_1, w_2, w_3,…]) = ∑_{d∣n} dw_d^(n/d)``. A ring homomorphism for every `n`, provided the underlying precision is large enough (will throw an error or behave unexpectedly otherwise)
+## Example
+```jldoctest
+julia> using AbstractAlgebra, WittVectors;
+
+
+julia> W=BigWittVectorRing(ZZ, 10)
+Big Witt vector ring represented up to degree 10 over Integers
+
+
+julia> w=W([10,9,8,7,6,5,4,3,2,1]);
+
+
+julia> q=W([2,4,6,8,10,1,3,5,7,9]);
+
+
+julia> z= w*q
+BigInt[20, 508, 6208, 34768, 1000492, -22549456, 30000596, -7151889450, -750372466, -4628706858520]
+
+
+julia> ghostmap(z, 2)
+1416
+
+
+julia> ghostmap(z,9)
+1223001900542
+
+
+julia> ghostmap(w,2)*ghostmap(q,2)==ghostmap(z,2)
+true
+
+
+julia> ghostmap(w,9)*ghostmap(q,9)==ghostmap(z,9)
+true
+
+```
+"""
+ghostmap(w::WittVector{T}, n) where T <: RingElem, ghostmap(w::TruncatedWittVector{T}, n) where T <: RingElem
 ################
 #Canonical Unit#
 ################

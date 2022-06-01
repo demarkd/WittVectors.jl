@@ -20,7 +20,7 @@ function equality(a::T, b::T) where T <: AbstractAlgebra.NCRingElement
       return isapprox(a, b)
    end
 end
-include("wittpolys.jl")
+#include("wittpolys.jl")
 function test_Witt_interface(W::BigWittRing; reps = 50)
     T=elem_type(W)
     @testset "Witt interface for $(W) of type $(typeof(W))"begin

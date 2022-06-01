@@ -345,7 +345,8 @@ end
 
 function *(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
 	parent(w) != parent(v) && error("Incompatible Rings--possibly because of differing native precision for underlying Witt rings")
-	multnseries = multseries(w.xcoords, v.xcoords)
+	S=parent(w).truncationset
+	multnseries = multseries(w.xcoords, v.xcoords, S)
 	prodvec=deepcopy(w)
 	prodvec.xcoords=getcoords(multnseries)
 	return truncate!(prodvec)

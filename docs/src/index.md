@@ -23,6 +23,7 @@ pTypicalWittVectorRing
 ```@docs
 parent_type(::Type{WittVector{T}}) where T <: RingElement
 project
+ghostmap
 ```
 
 ## Basic Manipulation
