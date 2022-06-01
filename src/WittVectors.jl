@@ -301,6 +301,12 @@ BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
 
 julia> z==w+w
 true
+
+julia> r=(-2)*w
+BigInt[-2, -3, 2, -9, 6, -4, 18, -93, 54, -72]
+
+julia> r + w + w== 0
+true
 ```
 """
 function *(w::WittVector{T}, c::Integer) where T <: RingElement
