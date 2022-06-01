@@ -282,7 +282,7 @@ julia> using AbstractAlgebra; W=BigWittVectorRing(ZZ,10)
 Big Witt vector ring represented up to degree 10 over Integers
 
 julia> w=one(W)
-xBigInt[1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+BigInt[1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 julia> x=W(2)*w
 BigInt[2, 0, 0, 0, 0, 0, 0, 0, 0, 0]

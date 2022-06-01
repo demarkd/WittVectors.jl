@@ -27,7 +27,7 @@ divexact(w::WittVector{T}, v::WittVector{T}; check::Bool=true) where T <: RingEl
 ## Basic Manipulation
 ```@docs
 zero
-isconstant
+WittVectors.isconstant
 is_unit(w::WittVector)
 ```
 ## Binary Operations
