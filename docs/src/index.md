@@ -3,6 +3,7 @@
 DocTestSetup = quote
 	using AbstractAlgebra
 	using WittVectors
+end
 ```
 ```@contents
 ```
