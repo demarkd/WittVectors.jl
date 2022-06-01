@@ -20,7 +20,7 @@ Parent object type for Big Witt Rings (i.e. truncated only by a maximum precisio
 	(W::BigWittRing{T})() where T <: RingElement
 The basic constructor given a Witt Ring W. Identical to zero(W) (in fact the latter simply calls W())
 #### Example:
-```julia-repl
+```jldoctest
 julia> W=BigWittVectorRing(ZZ,10)
 Big Witt vector ring represented up to degree 10 over Integers
 
@@ -34,7 +34,7 @@ true
 	(W::BigWittRing{T})(c::T) where T <: RingElement
 Since there is no additive ring homomorphism R→W(R), calling `W(c)` for `c` an element of `R` returns the constant lift of `c`. This is more-or-less the only candidate for that functionality, but for that reason `W(c)` for `c` an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such ``F`` (to my knowledge) admit a natural transformation ``id ⟹  F``, so in those cases calling ``FR(c)`` where `c` may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of `c` in the composition of structure maps ``Z→R→FR``. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined `W(c)` to be the constant lift of the image of `c` in ``ZZ→R``.
 #### Example: 
-```julia-repl
+```jldoctest
 
 julia> W1=BigWittVectorRing(ZZ,10)
 Big Witt vector ring represented up to degree 10 over Integers
@@ -277,7 +277,7 @@ end
 	*(w::WittVector{T}, c::Integer) where T <: RingElement
 Since there is no additive ring homomorphism R→W(R), calling W(c) for c an element of R returns the constant lift of c. This is more-or-less the only candidate for that functionality, but for that reason W(c) for c an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such F (to my knowledge) admit a natural transformation id ⟹F, so in those cases calling FR(c) where c may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of c in the composition of structure maps Z→R→FR. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined W(c) to be the constant lift of the image of c in Z→R. Thus, in particular, for a Witt Vector w∈W, W(2)*w ≂̸ w+w (again, unlike other functorial ring constructions in Julia). To compensate, an additional method has been added to the multiplication function * to accept mixed arguments.
 ### Example:
-```julia-repl
+```jldoctest
 julia> W = BigWittVectorRing(ZZ, 10)
 julia> w = one(W)
 julia> x = W(2)*w

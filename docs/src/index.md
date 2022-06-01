@@ -1,5 +1,9 @@
 # WittVectors.jl: An implementation of big Witt vectors supporting truncation over arbitrary divisor-stable sets
-
+```@meta
+DocTestSetup = quote
+	using AbstractAlgebra
+	using WittVectors
+```
 ```@contents
 ```
 ## Parent and child objects and constructors
