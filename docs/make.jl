@@ -1,5 +1,5 @@
 push!(LOAD_PATH,"/home/ddm/code/julia/WittVectors/src")
-using Documenter, WittVectors, AbstractAlgebra, Hecke
+using Documenter, WittVectors, AbstractAlgebra, Hecke, Nemo
 DocMeta.setdocmeta!(WittVectors, :DocTestSetup, :(using WittVectors, AbstractAlgebra;); recursive = true)
 
 makedocs(
