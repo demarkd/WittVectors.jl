@@ -2,7 +2,7 @@ module WittVectors
 
 
 using AbstractAlgebra
-
+using Hecke
 using Random: Random, SamplerTrivial, GLOBAL_RNG
 using RandomExtensions: RandomExtensions, Make2, AbstractRNG
 using Primes: isprime
@@ -13,13 +13,12 @@ import Base: show, +, -, *, ^, ==, inv, isone, iszero, one, zero, rand, deepcopy
 
 export BigWittRing, BigWittVectorRing, WittVector, TruncatedBigWittRing, TruncatedWittVector, TruncatedBigWittVectorRing, pTypicalWittVectorRing, truncate, isconstant, zero, one, isone, iszero, truncationbools, truncationlist, divisor_stabilize
 """
-## Parent and child object types
 	mutable struct BigWittRing{T <: RingElement} <: Ring
 Parent object type for Big Witt Rings (i.e. truncated only by a maximum precision rather than a more general divisor-stable set). Should be constructed using the exported constructors, although I think it's basically safe to call WittVectors.BigWittRing directly.
 
 	(W::BigWittRing{T})() where T <: RingElement
 The basic constructor given a Witt Ring W. Identical to zero(W) (in fact the latter simply calls W())
-#### Example:
+## Example:
 ```jldoctest
 julia> using AbstractAlgebra;
 
@@ -34,11 +33,11 @@ BigInt[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 julia> iszero(w)
 true
 ```
-### Constructors
+# Constructors
 	(W::BigWittRing{T})(c::Integer) where T <: RingElement
 	(W::BigWittRing{T})(c::T) where T <: RingElement
 Since there is no additive ring homomorphism R→W(R), calling `W(c)` for `c` an element of `R` returns the constant lift of `c`. This is more-or-less the only candidate for that functionality, but for that reason `W(c)` for `c` an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such ``F`` (to my knowledge) admit a natural transformation ``id ⟹  F``, so in those cases calling ``FR(c)`` where `c` may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of `c` in the composition of structure maps ``Z→R→FR``. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined `W(c)` to be the constant lift of the image of `c` in ``ZZ→R``.
-#### Example: 
+## Example: 
 ```jldoctest
 julia> using WittVectors;
 
@@ -67,7 +66,38 @@ The second one is possibly needed to prevent ambiguity, according to the [ring i
 
 	(W::BigWittRing{T})(c::T) where T <: RingElement
 This is the constant lift ``R→W(R)``, which is multiplicative but not additive.
+```jldoctest
+julia> using AbstractAlgebra, Hecke, WittVectors;
 
+Welcome to 
+
+    _    _           _
+   | |  | |         | |
+   | |__| | ___  ___| | _____
+   |  __  |/ _ \/ __| |/ / _ \
+   | |  | |  __/ (__|   <  __/
+   |_|  |_|\___|\___|_|\_\___|
+    
+Version 0.14.2 ... 
+ ... which comes with absolutely no warranty whatsoever
+(c) 2015-2021 by Claus Fieker, Tommy Hofmann and Carlo Sircana
+
+
+julia> Qx,x = PolynomialRing(Hecke.QQ, "x")
+(Univariate Polynomial Ring in x over Rational Field, x)
+
+julia> f=x^3+x+1
+x^3 + x + 1
+
+julia> R, a=Hecke.NumberField(f, 'a', cached=true, check=true)
+(Number field over Rational Field with defining polynomial x^3 + x + 1, a)
+
+julia> W=BigWittVectorRing(R,8)
+Big Witt vector ring represented up to degree 8 over Number field over Rational Field with defining polynomial x^3 + x + 1
+
+julia> W(a+2)
+nf_elem[a + 2, 0, 0, 0, 0, 0, 0, 0]
+```
 
 	(W::BigWittRing{T})(A::Vector{T}) where T <: RingElem
 Additional constructor to create a Witt vector by supplying its coordinates. Will return an error if supplied more coordinates than `W.prec` 

@@ -1,6 +1,6 @@
 push!(LOAD_PATH,"/home/ddm/code/julia/WittVectors/src")
-using Documenter, WittVectors, AbstractAlgebra
-DocMeta.setdocmeta!(WittVectors, :DocTestSetup, :(using WittVectors; using AbstractAlgebra); recursive = true)
+using Documenter, WittVectors, AbstractAlgebra, Hecke
+DocMeta.setdocmeta!(WittVectors, :DocTestSetup, :(using WittVectors, Hecke, AbstractAlgebra;); recursive = true)
 
 makedocs(
 	 modules = [WittVectors],
