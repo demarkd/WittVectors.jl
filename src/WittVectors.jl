@@ -35,8 +35,11 @@ true
 Since there is no additive ring homomorphism R→W(R), calling `W(c)` for `c` an element of `R` returns the constant lift of `c`. This is more-or-less the only candidate for that functionality, but for that reason `W(c)` for `c` an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such ``F`` (to my knowledge) admit a natural transformation ``id ⟹  F``, so in those cases calling ``FR(c)`` where `c` may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of `c` in the composition of structure maps ``Z→R→FR``. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined `W(c)` to be the constant lift of the image of `c` in ``ZZ→R``.
 #### Example: 
 ```jldoctest
+julia> using WittVectors;
 
-julia> using AbstractAlgebra; W1=BigWittVectorRing(ZZ,10)
+julia> using AbstractAlgebra;
+
+julia> W1=BigWittVectorRing(ZZ,10)
 Big Witt vector ring represented up to degree 10 over Integers
 
 julia> W1(256)
@@ -48,7 +51,7 @@ Big Witt vector ring represented up to degree 10 over Finite field F_7
 julia> W2(256)
 AbstractAlgebra.GFElem{Int64}[4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-julia> W3=BigWittVectorRing(AbsSeriesRing(GF(23),10),10) #functionality uninterupted by using recursive constructions
+julia> W3=BigWittVectorRing(AbsSeriesRing(GF(23),10),10)
 Big Witt vector ring represented up to degree 10 over Univariate power series ring in x over Finite field F_23
 
 julia> W3(256)
