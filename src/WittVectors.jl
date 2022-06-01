@@ -176,7 +176,7 @@ function iszero(w::WittVector)
 	return prod(iszero(X[i]) for i in eachindex(X))
 end
 """
-	isconstant(w::WittVector)
+	function isconstant(w::WittVector)
 Returns true if w is in the image of the constant lift set map R→W(R) (better known by another name, but we are avoiding the Nazi associations (somewhat unavoidable in the case of Ernst Witt)).
 """
 function isconstant(w::WittVector)
