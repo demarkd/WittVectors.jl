@@ -72,7 +72,7 @@ DocTestSetup = quote
 end
 ```
 ```jldoctest
-julia> using AbstractAlgebra, Hecke, WittVectors;
+julia> using AbstractAlgebra, Hecke, WittVectors, Nemo;
 
 
 
