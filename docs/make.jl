@@ -3,7 +3,14 @@ using Documenter, WittVectors, AbstractAlgebra
 DocMeta.setdocmeta!(WittVectors, :DocTestSetup, :(using WittVectors, AbstractAlgebra;); recursive = true)
 
 makedocs(
-	 modules = [WittVectors],
-	 sitename="WittVectors.jl Documentation")
+    format = Documenter.HTML(),
+    modules = [WittVectors],
+    sitename="WittVectors.jl",
+    pages = [
+	     "index.md",
+	     "fulldocs.md",
+	     ],
+)
 deploydocs(repo = "github.com/demarkd/WittVectors.jl.git",
+	   target = "build",
 )
