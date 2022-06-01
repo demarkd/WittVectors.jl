@@ -290,65 +290,39 @@ end
 Since there is no additive ring homomorphism R→W(R), calling W(c) for c an element of R returns the constant lift of c. This is more-or-less the only candidate for that functionality, but for that reason W(c) for c an integer does not behave the way it does for the other functorial constructions out of the category of Rings of AbstractAlgebra.jl. All of the pre-existing such F (to my knowledge) admit a natural transformation id ⟹F, so in those cases calling FR(c) where c may be interpreted as either an element of R or as a Julia integral type is unambiguous and returns the image of c in the composition of structure maps Z→R→FR. Since we do not have such a natural transformation at our disposal, to avoid ambiguity we have defined W(c) to be the constant lift of the image of c in Z→R. Thus, in particular, for a Witt Vector w∈W, W(2)*w ≂̸ w+w (again, unlike other functorial ring constructions in Julia). To compensate, an additional method has been added to the multiplication function * to accept mixed arguments.
 ### Example:
 ```jldoctest
-julia> using AbstractAlgebra; W=BigWittVectorRing(ZZ,10)
-ERROR: UndefVarError: BigWittVectorRing not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+julia> using AbstractAlgebra;
+
+julia> using WittVectors;
+
+julia> W=BigWittVectorRing(ZZ,10)
+Big Witt vector ring represented up to degree 10 over Integers
 
 julia> w=one(W)
-ERROR: UndefVarError: W not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+BigInt[1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 julia> x=W(2)*w
-ERROR: UndefVarError: W not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+BigInt[2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 julia> y=2*w
-ERROR: UndefVarError: w not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
 
 julia> x==w+w
-ERROR: UndefVarError: w not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+false
 
 julia> y==w+w
-ERROR: UndefVarError: w not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+true
 
 julia> z=w*2
-ERROR: UndefVarError: w not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
 
 julia> z==w+w
-ERROR: UndefVarError: w not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+true
 
-julia> r=(-2)*w
-ERROR: UndefVarError: w not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+julia> t=(-2)*w
+BigInt[-2, -3, 2, -9, 6, -4, 18, -93, 54, -72]
 
-julia> r + w + w== 0
-ERROR: UndefVarError: r not defined
-Stacktrace:
- [1] top-level scope
-   @ none:1
+julia> t + w + w == 0
+true
 ```
 """
 function *(w::WittVector{T}, c::Integer) where T <: RingElement
