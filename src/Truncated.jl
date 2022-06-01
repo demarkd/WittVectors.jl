@@ -12,6 +12,33 @@ Each of these mirror the functionality in the untruncated case.
 
     function (W::TruncatedBigWittRing{T})(A::Vector{T}) where T <: RingElem
 Return a Witt vector with coordinates specified by `A`. `A` can be the length of `W.truncationset` (i.e. `W.untruncated.prec` in which case it will ignore the entries of `A` ignored by `W` or it can be length equal to the number of `true` entries in `W.truncationset`, in which case it will fill in the missing (irrelevant) entries with zero. 
+## Example
+```jldoctest
+julia> using AbstractAlgebra, WittVectors;
+
+julia> W=pTypicalWittVectorRing(GF(3),2,3)
+Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8]
+
+julia> w=W([2,1,0,2])
+AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
+
+julia> w1=W([2,1,1,0,1,1,1,2])
+AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
+
+julia> w==w1
+true
+
+julia> w1.xcoords
+8-element Vector{AbstractAlgebra.GFElem{Int64}}:
+ 2
+ 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 2
+```
 """
 mutable struct TruncatedBigWittRing{T <: RingElement} <: Ring
 	untruncated::BigWittRing{T}
@@ -534,7 +561,20 @@ end
 function (W::TruncatedBigWittRing{T})(A::Vector) where T <: RingElement
 	R=base_ring(W)
 	Ap=broadcast(R,A)
-	return W(Ap)
+	n=(W.untruncated).prec
+	m=length(truncationlist(W.truncationset))
+	if n== length(A)
+		r=deepcopy(zero(W))
+		r.xcoords=Ap
+	elseif m==length(A)
+		r=deepcopy(zero(W))
+		Sl=truncationlist(W.truncationset)
+		for i in eachindex(Sl)
+			r.xcoords[Sl[i]]=Ap[i]
+		end
+	else error("Dimension mismatch; could not confidently interpret supplied vector as coordinates for a truncated Witt vector in $(W)")
+	end
+	return truncate!(r)
 end
 function (W::TruncatedBigWittRing{T})(w::TruncatedWittVector{T}) where T <: RingElement
 	W != parent(w) && error("Unable to coerce element")
@@ -570,6 +610,33 @@ end
     function pTypicalWittVectorRing(R::Ring, p::Integer, m::Integer,cached::Bool=true)
 Specialized version of the `TruncatedBigWittVectorRing` to create ``W_{p^m}(R)``, the ring of `p`-typical Witt vectors represented up to entry `p^m`. Resulting object `W` will have `W.untruncated.prec` equal to `p^m`.
 
+## Example:
+```jldoctest
+julia> using AbstractAlgebra, WittVectors;
+
+julia> W=pTypicalWittVectorRing(GF(3),2,3)
+Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8]
+
+julia> w=W([2,1,0,2])
+AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
+
+julia> w1=W([2,1,1,0,1,1,1,2])
+AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
+
+julia> w==w1
+true
+
+julia> w1.xcoords
+8-element Vector{AbstractAlgebra.GFElem{Int64}}:
+ 2
+ 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 2
+```
     pTypicalWittVectorRing(W::BigWittRing, p::Integer, m::Integer, cached::Bool=true)
 Return `pTypicalWittVectorRing(base_ring(W), p, m, cached)` 
 """
