@@ -66,6 +66,11 @@ The second one is possibly needed to prevent ambiguity, according to the [ring i
 
 	(W::BigWittRing{T})(c::T) where T <: RingElement
 This is the constant lift ``R→W(R)``, which is multiplicative but not additive.
+```@meta
+DocTestSetup = quote
+	using AbstractAlgebra, WittVectors, Hecke
+end
+```
 ```jldoctest
 julia> using AbstractAlgebra, Hecke, WittVectors;
 
@@ -97,6 +102,9 @@ Big Witt vector ring represented up to degree 8 over Number field over Rational 
 
 julia> W(a+2)
 nf_elem[a + 2, 0, 0, 0, 0, 0, 0, 0]
+```
+```@meta
+DocTestSetup = nothing
 ```
 
 	(W::BigWittRing{T})(A::Vector{T}) where T <: RingElem
