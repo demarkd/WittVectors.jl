@@ -22,12 +22,21 @@ The basic constructor given a Witt Ring W. Identical to zero(W) (in fact the lat
 #### Example:
 ```jldoctest
 julia> using AbstractAlgebra; W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
+ERROR: UndefVarError: BigWittVectorRing not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> w=W()
-BigInt[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ERROR: UndefVarError: W not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 julia> iszero(w)
-true
+ERROR: UndefVarError: w not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 ```
 ### Constructors
 	(W::BigWittRing{T})(c::Integer) where T <: RingElement
@@ -282,34 +291,64 @@ Since there is no additive ring homomorphism R→W(R), calling W(c) for c an ele
 ### Example:
 ```jldoctest
 julia> using AbstractAlgebra; W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
+ERROR: UndefVarError: BigWittVectorRing not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> w=one(W)
-BigInt[1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ERROR: UndefVarError: W not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> x=W(2)*w
-BigInt[2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ERROR: UndefVarError: W not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> y=2*w
-BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
+ERROR: UndefVarError: w not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> x==w+w
-false
+ERROR: UndefVarError: w not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> y==w+w
-true
+ERROR: UndefVarError: w not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> z=w*2
-BigInt[2, -1, -2, -4, -6, -12, -18, -40, -54, -120]
+ERROR: UndefVarError: w not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> z==w+w
-true
+ERROR: UndefVarError: w not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> r=(-2)*w
-BigInt[-2, -3, 2, -9, 6, -4, 18, -93, 54, -72]
+ERROR: UndefVarError: w not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 
 julia> r + w + w== 0
-true
+ERROR: UndefVarError: r not defined
+Stacktrace:
+ [1] top-level scope
+   @ none:1
 ```
 """
 function *(w::WittVector{T}, c::Integer) where T <: RingElement
