@@ -67,7 +67,7 @@ The second one is possibly needed to prevent ambiguity, according to the [ring i
 	(W::BigWittRing{T})(c::T) where T <: RingElement
 This is the constant lift ``R→W(R)``, which is multiplicative but not additive.
 ```jldoctest
-julia> using AbstractAlgebra, Hecke, WittVectors, nemo;
+julia> using AbstractAlgebra, Hecke, WittVectors, Nemo;
 
 
 
