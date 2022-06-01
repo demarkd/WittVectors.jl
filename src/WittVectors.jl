@@ -287,7 +287,7 @@ project(w::TruncatedWittVector{T}, n::Integer=1) where T <: RingElement = w.xcoo
 	ghostmap(w::TruncatedWittVector{T}, n) where T <: RingElem
 The ghost map ``W(R)→R``. 
 
-Defined by the formula ``ω_n([w_1, w_2, w_3,…]) = ∑_{d∣n} dw_d^(n/d)``. A ring homomorphism for every `n`, provided the underlying precision is large enough (will throw an error or behave unexpectedly otherwise)
+Defined by the formula ``ω_n([w_1, w_2, w_3,…]) = ∑_{d∣n} dw_d^{(n/d)}``. A ring homomorphism for every `n`, provided the underlying precision is large enough (will throw an error or behave unexpectedly otherwise)
 ## Example
 ```jldoctest
 julia> using AbstractAlgebra, WittVectors;
