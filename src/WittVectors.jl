@@ -72,7 +72,7 @@ DocTestSetup = quote
 end
 ```
 ```jldoctest
-julia> using AbstractAlgebra, Hecke, WittVectors, Nemo;
+julia> using AbstractAlgebra, Hecke, WittVectors; 
 
 
 
@@ -89,7 +89,7 @@ julia> W=BigWittVectorRing(R,8)
 Big Witt vector ring represented up to degree 8 over Number field over Rational Field with defining polynomial x^3 + x + 1
 
 julia> W(a+2)
-nf_elem[a + 2, 0, 0, 0, 0, 0, 0, 0]
+Nemo.nf_elem[a + 2, 0, 0, 0, 0, 0, 0, 0]
 ```
 ```@meta
 DocTestSetup = nothing
