@@ -23,7 +23,7 @@ pTypicalWittVectorRing
 ```@docs
 parent_type(::Type{WittVector{T}}) where T <: RingElement
 project
-ghostmap(w::WittVector{T}, n)
+ghostmap(w::WittVector{T}, n) where T <: RingElement
 ```
 
 ## Basic Manipulation
