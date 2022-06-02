@@ -47,6 +47,9 @@ There are a few ways to create Witt vectors. For elements ``[c]`` of the set-the
 ```jldoctest
 julia> using WittVectors, AbstractAlgebra;
 
+julia> W= BigWittVectorRing(GF(7), 10)
+Big Witt vector ring represented up to degree 10 over Finite field F_7
+
 julia> a=W(6)
 AbstractAlgebra.GFElem{Int64}[6, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
