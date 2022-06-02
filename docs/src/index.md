@@ -1,4 +1,115 @@
-# Quick Start Guide
+#Overview
+## Installation
+These installation instructions assume a \*nix-family operating system with Git and Julia 1.7.x or later already installed. To install Julia, follow the distribution-specific instructions [here.](https://julialang.org/downloads/) For Windows users, first format your primary storage device and install a \*nix-family operating system before returning to these instructions.
+
+To install WittVectors.jl and use it in the REPL, clone this git repository to a local directory on your machine. Then, open Julia from the root of that directory. 
+```
+$ git clone https://github.com/demarkd/WittVectors.jl
+Cloning into 'WittVectors.jl'...
+remote: Enumerating objects: 1175, done.
+remote: Counting objects: 100% (272/272), done.
+remote: Compressing objects: 100% (147/147), done.
+remote: Total 1175 (delta 112), reused 235 (delta 84), pack-reused 903
+Receiving objects: 100% (1175/1175), 301.22 KiB | 929.00 KiB/s, done.
+Resolving deltas: 100% (492/492), done.
+$ cd WittVectors.jl
+WittVectors.jl$ julia
+               _
+   _       _ _(_)_     |  Documentation: https://docs.julialang.org
+  (_)     | (_) (_)    |
+   _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
+  | | | | | | |/ _` |  |
+  | | |_| | | | (_| |  |  Version 1.7.3 (2022-05-06)
+ _/ |\\__'_|_|_|\\__'_|  |  Official https://julialang.org/ release
+|__/                   |
+
+julia>
+```
+From there go into Pkg mode by hitting `]` on your keyboard. The prompt should change to one indicating you are using Pkg. There, activate the current directory's project with `activate .` after which the prompt should change to indicate the current project is WittVectors. Next, instantiate it to install the required dependencies with `instantiate`. You can optionally precompile those packages with `precompile`--otherwise packages will precompile as you load them. If you choose to precompile now, this may take longer or shorter depending on whether you have already locally installed the packages in question. Once you are done setting up the project, enter `<backspace>` to an empty `pkg>` prompt to return to your main Julia session. You can then make the exported contents of `WittVectors.jl` available with the Julia command `using WittVectors.jl`. If you'd like to keep your namespace clean, you may instead `import WittVectors.jl`, which imports the exported names as `WittVectors.<name>`.
+```
+#press the ] key
+(@v1.7) pkg> activate .
+  Activating project at `~/WittVectors.jl`
+
+(WittVectors) pkg> instantiate
+    Updating registry at `~/.julia/registries/General.toml`
+    Updating `~/WittVectors.jl/Project.toml`
+  [c3fe647b] + AbstractAlgebra v0.26.0
+  [e30172f5] + Documenter v0.27.18
+  [27ebfcd6] + Primes v0.5.2
+  [fb686558] + RandomExtensions v0.4.3
+  [295af30f] + Revise v3.3.3
+    Updating `~/WittVectors.jl/Manifest.toml`
+  [a4c015fc] + ANSIColoredPrinters v0.0.1
+  [c3fe647b] + AbstractAlgebra v0.26.0
+  [da1fd8a2] + CodeTracking v1.0.9
+  [ffbed154] + DocStringExtensions v0.8.6
+  [e30172f5] + Documenter v0.27.18
+  [d5909c97] + GroupsCore v0.4.0
+  [b5f81e59] + IOCapture v0.2.2
+  [18e54dd8] + IntegerMathUtils v0.1.0
+  [682c06a0] + JSON v0.21.3
+  [aa1ae85d] + JuliaInterpreter v0.9.13
+  [6f1432cf] + LoweredCodeUtils v2.2.2
+  [1914dd2f] + MacroTools v0.5.9
+  [bac558e1] + OrderedCollections v1.4.1
+  [69de0a69] + Parsers v2.3.1
+  [27ebfcd6] + Primes v0.5.2
+  [fb686558] + RandomExtensions v0.4.3
+  [ae029012] + Requires v1.3.0
+  [295af30f] + Revise v3.3.3
+  [0dad84c5] + ArgTools
+  [56f22d72] + Artifacts
+  [2a0f44e3] + Base64
+  [ade2ca70] + Dates
+  [8ba89e20] + Distributed
+  [f43a241f] + Downloads
+  [7b1f6079] + FileWatching
+  [b77e0a4c] + InteractiveUtils
+  [b27032c2] + LibCURL
+  [76f85450] + LibGit2
+  [8f399da3] + Libdl
+  [37e2e46d] + LinearAlgebra
+  [56ddb016] + Logging
+  [d6f4376e] + Markdown
+  [a63ad114] + Mmap
+  [ca575930] + NetworkOptions
+  [44cfe95a] + Pkg
+  [de0858da] + Printf
+  [3fa0cd96] + REPL
+  [9a3f8284] + Random
+  [ea8e919c] + SHA
+  [9e88b42a] + Serialization
+  [6462fe0b] + Sockets
+  [2f01184e] + SparseArrays
+  [fa267f1f] + TOML
+  [a4e569a6] + Tar
+  [8dfed614] + Test
+  [cf7118a7] + UUIDs
+  [4ec0a83e] + Unicode
+  [e66e0078] + CompilerSupportLibraries_jll
+  [deac9b47] + LibCURL_jll
+  [29816b5a] + LibSSH2_jll
+  [c8ffd9c3] + MbedTLS_jll
+  [14a3606d] + MozillaCACerts_jll
+  [4536629a] + OpenBLAS_jll
+  [83775a58] + Zlib_jll
+  [8e850b90] + libblastrampoline_jll
+  [8e850ede] + nghttp2_jll
+  [3f19e933] + p7zip_jll
+
+(WittVectors) pkg> precompile
+Precompiling project...
+  1 dependency successfully precompiled in 2 seconds (24 already precompiled)
+
+#now hit <backspace>
+julia> using WittVectors
+```
+In order to use WittVectors.jl within another project, you will need to make its source directory visible to that project by adding it to the project's import path. In the repl, this can be done with `]add <path-to-WittVectors.jl>` (with the `]` indicating this should be run in Pkg mode). This changes your project's `Project.toml` so now, any time you activate that project in the REPL or by calling a julia evaluation from the command line, `using WittVectors` should behave as expected.
+
+!!! info
+    Installation will become substantially easier should I ever register WittVectors.jl in the Julia general registry.
+## Normal Usage
 WittVectors.jl is designed to be used with [AbstractAlgebra.jl](https://nemocas.github.io/AbstractAlgebra.jl/dev/). Any time you will be using WittVectors either in the REPL or your own Julia script, call it using `using AbstractAlgebra, WittVectors`, as the base rings you will need are provided by that package. An exception is if you are only using base rings provided properly by another package in the family of related projects, such as [Nemo.jl](http://nemocas.org/) or [Hecke.jl](https://github.com/thofma/Hecke.jl/), in which case you should load that package alongside WittVectors.jl.
 
 ## Parents and Children
