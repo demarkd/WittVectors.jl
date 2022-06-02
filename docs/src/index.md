@@ -1,7 +1,4 @@
 # WittVectors.jl: An implementation of Witt vectors over arbitrary truncation sets
-<!--[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://demarkd.github.io/WittVectors.jl/stable)-->
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://demarkd.github.io/WittVectors.jl/dev)
-[![Build Status](https://github.com/demarkd/WittVectors.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/demarkd/WittVectors.jl/actions/workflows/CI.yml?query=branch%3Amain)
 ## Quick Start Guide
 WittVectors.jl is designed to be used with [AbstractAlgebra.jl](https://nemocas.github.io/AbstractAlgebra.jl/dev/). Any time you will be using WittVectors either in the REPL or your own Julia script, call it using `using AbstractAlgebra, WittVectors`, as the base rings you will need are provided by that package. An exception is if you are only using base rings provided properly by another package in the family of related projects, such as [Nemo.jl](http://nemocas.org/) or [Hecke.jl](https://github.com/thofma/Hecke.jl/), in which case you should load that package alongside WittVectors.jl.
 
@@ -36,11 +33,14 @@ julia> W3==W4 #by default, calling a constructor twice for the same ring returns
 true
 
 ```
+
+```@raw html
 <details>
 <summary> More on parent objects </summary>
 
 As demonstrated at the end of that example, [by default] parent objects are cached so that attempting to create a Witt vector ring isomorphic to an existing Witt vector ring does not create a duplicate. There are a few exceptions, at least for now. For one, `BigWittRing`s and `TruncatedBigWittRing`s are always unequal. In addition, [for now] `TruncatedBigWittRing` carries a `BigWittRing` as part of its data (the `untruncated` field). All of the exported constructors for `TrucnatedBigWittRing`s `W` ensure that `W.untruncated.prec` is the maximal member of its truncation set, but it's possible (a) that the previous statement is actually a lie in some edge case (which should be reported to the author(s) as a bug) or (b) to use an internal command to create a `TruncatedBigWittRing` not having this property (god knows why you would want to, swim at your own risk).
 </details>
+```
 
 There are a few ways to create Witt vectors. For elements ``[c]`` of the set-theoretic constant lift ``R\to W(R)``, one can use `W(c)`. This is in contrast to other functorial constructions `F` provided by AbstractAlgebra.jl where for an integer `n`, `F(R)(n)` is the image of `n` in the composition of the structure map and a natural transformation ``\mathrm{id}\implies F``,  ``\mathbb{Z}\to R \to F(R)``. We do not have such a natural transformation at our disposal. Instead, we can the image of ``n\in\mathbb{Z}`` in the structure map ``\mathbb{Z}\to W(R)`` by calling ``n*W(1)``.
 ### Example
