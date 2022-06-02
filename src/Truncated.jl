@@ -665,6 +665,6 @@ Return the image of `w` in the quotient map ``W(R)→W_S(R)``. Parent object wil
 function truncate(w::WittVector, S::Vector{Bool})
 	W=truncate(w.parent, S)
 	t=deepcopy(zero(W))
-	t.xcoords=w.xcoords
+	t.xcoords=w.xcoords[1:length(t.xcoords)]
 	return truncate!(t)
 end
