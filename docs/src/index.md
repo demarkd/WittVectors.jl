@@ -135,10 +135,13 @@ true
 ## Performance and Limitations
 Well its a dang sure lot faster than my previous implementation of the p-Typical Witt Vectors in Sagemath last fall (which used the universal polynomial approach--bad idea).
 
-More seriously, WittVectors.jl works about as quick as you could hope up to indices of somewhere in the low hundreds--from there it begins to get slow. More optimization is needed on some performance-critical algorithms. Two places likely needing improvement are `WittVectors.getcoords`, which transforms an element in ``1+R[[T]]`` to its so-called Witt coordinates by inverting the formula [^Kedlaya] ``(x_0, x_1, \dots) \mapsto \prod (1-x_n T^n)``, and `WittVectors.seriesmult` which applies the formula [^hazew] ``\left(\prod (1-x_n T^n)\right)\otimes \left(\prod (1-y_n T^n)=\prod_{r,s} \left(1-x^{s/\gcd(r,s)}y^{r/\gcd(r,s)}t^{\lcm(r,s)}\right)^{-\gcd(r,s)}``.
+More seriously, WittVectors.jl works about as quick as you could hope up to indices of somewhere in the low hundreds--from there it begins to get slow. More optimization is needed on some performance-critical algorithms. Two places likely needing improvement are `WittVectors.getcoords`, which transforms an element in ``1+R[[T]]`` to its so-called Witt coordinates by inverting the formula [^Kedlaya] ``(x_0, x_1, \dots) \mapsto \prod (1-x_n T^n)``, and `WittVectors.multseries` which applies the formula [^Hazewinkel] ``\left(\prod (1-x_n T^n)\right)\otimes \left(\prod (1-y_n T^n)=\prod_{r,s} \left(1-x^{s/\mathrm{gcd}(r,s)}y^{r/\mathrm{gcd}(r,s)}t^{\mathrm{lcm}(r,s)}\right)^{-\mathrm{gcd}(r,s)}``.
 
-[^Kedlaya]: Kiran S. Kedlaya, Notes on Prismatic Cohomology. ((Link to course notes))[https://kskedlaya.org/prismatic/sec_lambda-rings.html]
-[^Hazewinkel]: Michiel Hazewinkel, Witt vectors. Part 1. Eqn (9.27). ((arXiv))[https://arxiv.org/abs/0804.3888]
+[^Kedlaya]: Kiran S. Kedlaya, Notes on Prismatic Cohomology. [(Link to course notes)](https://kskedlaya.org/prismatic/sec_lambda-rings.html)
+[^Hazewinkel]: Michiel Hazewinkel, Witt vectors. Part 1. Eqn (9.27). [(arXiv)](https://arxiv.org/abs/0804.3888)
+
+Julia includes quite a bit of support for timing and profiling ones computations. We provide a few performance tests below. All tests performed on a Lenovo Thinkpad X1 Carbon 4th Generation, equipped with a quaad-core Intel i5-6300U @ 3.000GHz and 4GB of ram on a single thread.
+
 ## Using other parts of OSCAR with WittVectors.jl
 
 
