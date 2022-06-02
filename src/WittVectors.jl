@@ -529,16 +529,18 @@ end
 #hooooooooo ok also #TODO
 #I suppose one option would be using the existing implementation for series rings--namely <random witt vector> = getcoords . 1+x<random series>
 #
-function RandomExtensions.make(W::BigWittRing, deg_range::UnitRange{Int}, vs...)
+RandomExtensions.maketype(W::BigWittRing, _) = elem_type(W)
+RandomExtensions.maketype(W::BigWittRing, deg_range::UnitRange{Int}, _) = elem_type(W)
+RandomExtensions.maketype(W::BigWittRing,_, _) = elem_type(W)
+function RandomExtensions.make(W::BigWittRing, vs...)
    R = base_ring(W)
    if length(vs) == 1 && elem_type(R) == Random.gentype(vs[1])
-      Make(W, deg_range, vs[1]) # forward to default Make constructor
+      RandomExtensions.Make(W, vs[1]) # forward to default Make constructor
    else
-      make(W, deg_range, make(R, vs...))
+      RandomExtensions.make(W, RandomExtensions.make(R, vs...))
    end
 end
 
-RandomExtensions.maketype(W::BigWittRing, _) = elem_type(W)
 
 # define rand for make(S, deg_range, v)
 #function rand(rng::AbstractRNG, sp::SamplerTrivial{<:Make3{<:RingElement,<:BigWittRing,UnitRange{Int}}})
@@ -561,6 +563,9 @@ function rand(rng::AbstractRNG, sp::SamplerTrivial{<:Make2{<:RingElement,<:BigWi
    return f=#
    return w
 end
+rand(rng::AbstractRNG, W::BigWittRing, v...)= rand(rng, RandomExtensions.make(W,v...))
+rand(W::BigWittRing{AbstractAlgebra.GFElem{Int64}},_)=rand(W)
+rand(W::BigWittRing, v...)= rand(Random.GLOBAL_RNG, W, v...)
 
 #################
 #Promotion Rules#
