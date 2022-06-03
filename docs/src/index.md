@@ -1,114 +1,16 @@
 # Overview
 ## Installation
-These installation instructions assume a \*nix-family operating system with Git and Julia 1.7.x or later already installed. To install Julia, follow the distribution-specific instructions [here.](https://julialang.org/downloads/) For Windows users, first format your primary storage device and install a \*nix-family operating system before returning to these instructions.
+These installation instructions assume Git and Julia 1.7.x or later are already installed.
 
-To install WittVectors.jl and use it in the REPL, clone this git repository to a local directory on your machine. Then, open Julia from the root of that directory. 
-```
-$ git clone https://github.com/demarkd/WittVectors.jl
-Cloning into 'WittVectors.jl'...
-remote: Enumerating objects: 1175, done.
-remote: Counting objects: 100% (272/272), done.
-remote: Compressing objects: 100% (147/147), done.
-remote: Total 1175 (delta 112), reused 235 (delta 84), pack-reused 903
-Receiving objects: 100% (1175/1175), 301.22 KiB | 929.00 KiB/s, done.
-Resolving deltas: 100% (492/492), done.
-$ cd WittVectors.jl
-WittVectors.jl$ julia
-               _
-   _       _ _(_)_     |  Documentation: https://docs.julialang.org
-  (_)     | (_) (_)    |
-   _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
-  | | | | | | |/ _` |  |
-  | | |_| | | | (_| |  |  Version 1.7.3 (2022-05-06)
- _/ |\\__'_|_|_|\\__'_|  |  Official https://julialang.org/ release
-|__/                   |
+To add WittVEctors to your current project's registry, the following should work:
+```julia-repl
+julia> using Pkg; Pkg.add https://github.com/demarkd/WittVectors.jl
 
-julia>
-```
-From there go into Pkg mode by hitting `]` on your keyboard. The prompt should change to one indicating you are using Pkg. There, activate the current directory's project with `activate .` after which the prompt should change to indicate the current project is WittVectors. Next, instantiate it to install the required dependencies with `instantiate`. You can optionally precompile those packages with `precompile`--otherwise packages will precompile as you load them. If you choose to precompile now, this may take longer or shorter depending on whether you have already locally installed the packages in question. Once you are done setting up the project, enter `<backspace>` to an empty `pkg>` prompt to return to your main Julia session. You can then make the exported contents of `WittVectors.jl` available with the Julia command `using WittVectors.jl`. If you'd like to keep your namespace clean, you may instead `import WittVectors.jl`, which imports the exported names as `WittVectors.<name>`.
-```
-#press the ] key
-(@v1.7) pkg> activate .
-  Activating project at `~/WittVectors.jl`
-
-(WittVectors) pkg> instantiate
-    Updating registry at `~/.julia/registries/General.toml`
-    Updating `~/WittVectors.jl/Project.toml`
-  [c3fe647b] + AbstractAlgebra v0.26.0
-  [e30172f5] + Documenter v0.27.18
-  [27ebfcd6] + Primes v0.5.2
-  [fb686558] + RandomExtensions v0.4.3
-  [295af30f] + Revise v3.3.3
-    Updating `~/WittVectors.jl/Manifest.toml`
-  [a4c015fc] + ANSIColoredPrinters v0.0.1
-  [c3fe647b] + AbstractAlgebra v0.26.0
-  [da1fd8a2] + CodeTracking v1.0.9
-  [ffbed154] + DocStringExtensions v0.8.6
-  [e30172f5] + Documenter v0.27.18
-  [d5909c97] + GroupsCore v0.4.0
-  [b5f81e59] + IOCapture v0.2.2
-  [18e54dd8] + IntegerMathUtils v0.1.0
-  [682c06a0] + JSON v0.21.3
-  [aa1ae85d] + JuliaInterpreter v0.9.13
-  [6f1432cf] + LoweredCodeUtils v2.2.2
-  [1914dd2f] + MacroTools v0.5.9
-  [bac558e1] + OrderedCollections v1.4.1
-  [69de0a69] + Parsers v2.3.1
-  [27ebfcd6] + Primes v0.5.2
-  [fb686558] + RandomExtensions v0.4.3
-  [ae029012] + Requires v1.3.0
-  [295af30f] + Revise v3.3.3
-  [0dad84c5] + ArgTools
-  [56f22d72] + Artifacts
-  [2a0f44e3] + Base64
-  [ade2ca70] + Dates
-  [8ba89e20] + Distributed
-  [f43a241f] + Downloads
-  [7b1f6079] + FileWatching
-  [b77e0a4c] + InteractiveUtils
-  [b27032c2] + LibCURL
-  [76f85450] + LibGit2
-  [8f399da3] + Libdl
-  [37e2e46d] + LinearAlgebra
-  [56ddb016] + Logging
-  [d6f4376e] + Markdown
-  [a63ad114] + Mmap
-  [ca575930] + NetworkOptions
-  [44cfe95a] + Pkg
-  [de0858da] + Printf
-  [3fa0cd96] + REPL
-  [9a3f8284] + Random
-  [ea8e919c] + SHA
-  [9e88b42a] + Serialization
-  [6462fe0b] + Sockets
-  [2f01184e] + SparseArrays
-  [fa267f1f] + TOML
-  [a4e569a6] + Tar
-  [8dfed614] + Test
-  [cf7118a7] + UUIDs
-  [4ec0a83e] + Unicode
-  [e66e0078] + CompilerSupportLibraries_jll
-  [deac9b47] + LibCURL_jll
-  [29816b5a] + LibSSH2_jll
-  [c8ffd9c3] + MbedTLS_jll
-  [14a3606d] + MozillaCACerts_jll
-  [4536629a] + OpenBLAS_jll
-  [83775a58] + Zlib_jll
-  [8e850b90] + libblastrampoline_jll
-  [8e850ede] + nghttp2_jll
-  [3f19e933] + p7zip_jll
-
-(WittVectors) pkg> precompile
-Precompiling project...
-  1 dependency successfully precompiled in 2 seconds (24 already precompiled)
-
-#now hit <backspace>
 julia> using WittVectors
 ```
-In order to use WittVectors.jl within another project, you will need to make its source directory visible to that project by adding it to the project's import path. In the repl, this can be done with `]add <path-to-WittVectors.jl>` (with the `]` indicating this should be run in Pkg mode). This changes your project's `Project.toml` so now, any time you activate that project in the REPL or by calling a julia evaluation from the command line, `using WittVectors` should behave as expected.
 
 !!! info
-    Installation will become substantially easier should I ever register WittVectors.jl in the Julia general registry.
+    Installation will become even easier should I ever register WittVectors.jl in the Julia general registry.
 ## Normal Usage
 WittVectors.jl is designed to be used with [AbstractAlgebra.jl](https://nemocas.github.io/AbstractAlgebra.jl/dev/). Any time you will be using WittVectors either in the REPL or your own Julia script, call it using `using AbstractAlgebra, WittVectors`, as the base rings you will need are provided by that package. An exception is if you are only using base rings provided properly by another package in the family of related projects, such as [Nemo.jl](http://nemocas.org/) or [Hecke.jl](https://github.com/thofma/Hecke.jl/), in which case you should load that package alongside WittVectors.jl.
 
@@ -246,12 +148,13 @@ true
 ## Performance and Limitations
 Well its a dang sure lot faster than my previous implementation of the p-Typical Witt Vectors in Sagemath last fall (which used the universal polynomial approach--bad idea).
 
-More seriously, WittVectors.jl works about as quick as you could hope up to indices of somewhere in the low hundreds--from there it begins to get slow. More optimization is needed on some performance-critical algorithms. Two places likely needing improvement are `WittVectors.getcoords`, which transforms an element in ``1+R[[T]]`` to its so-called Witt coordinates by inverting the formula [^Kedlaya] ``(x_0, x_1, \dots) \mapsto \prod (1-x_n T^n)``, and `WittVectors.multseries` which applies the formula [^Hazewinkel] ``\left(\prod (1-x_n T^n)\right)\otimes \left(\prod (1-y_n T^n)=\prod_{r,s} \left(1-x^{s/\mathrm{gcd}(r,s)}y^{r/\mathrm{gcd}(r,s)}t^{\mathrm{lcm}(r,s)}\right)^{-\mathrm{gcd}(r,s)}``.
+More seriously, WittVectors.jl works about as quick as you could hope up to indices of somewhere in the low hundreds--from there it begins to get slow. More optimization is needed on some performance-critical algorithms. Two places likely needing improvement are `WittVectors.getcoords`, which transforms an element in ``1+R[[T]]`` to its so-called Witt coordinates by inverting the formula [^Kedlaya] ``(x_0, x_1, \dots) \mapsto \prod (1-x_n T^n)``, and `WittVectors.multseries` which applies the formula [^Hazewinkel] ``\left(\prod (1-x_n T^n)\right)\otimes \left(\prod (1-y_n T^n\right)=\prod_{r,s} \left(1-x^{s/\mathrm{gcd}(r,s)}y^{r/\mathrm{gcd}(r,s)}t^{\mathrm{lcm}(r,s)}\right)^{-\mathrm{gcd}(r,s)}``.
 
 [^Kedlaya]: Kiran S. Kedlaya, Notes on Prismatic Cohomology. [(Link to course notes)](https://kskedlaya.org/prismatic/sec_lambda-rings.html)
 [^Hazewinkel]: Michiel Hazewinkel, Witt vectors. Part 1. Eqn (9.27). [(arXiv)](https://arxiv.org/abs/0804.3888)
 
-Julia includes quite a bit of support for timing and profiling ones computations. We provide a few performance tests below. All tests performed on a Lenovo Thinkpad X1 Carbon 4th Generation, equipped with a quad-core Intel i5-6300U @ 3.000GHz and 4GB of ram on a single thread using POP!_os 20.04 LTS and Julia 1.7.3.
+Julia includes quite a bit of support for timing and profiling ones computations. We provide a few performance tests below. All tests performed on a Lenovo Thinkpad X1 Carbon 4th Generation, equipped with a quad-core Intel i5-6300U @ 3.000GHz and 4GB of ram on a single thread using POP!_os 20.04 LTS and Julia 1.7.3. All of these benchmarks should be considered ballpark, as some confounding factors may have caused inconsistency in computation time. The general point is that: things are very fast through around degree 16 for most rings; by degree 128, things are generally quite slow. Of the three main ground ring types provided by AbstractAlgebra.jl, finite fields are the fastest, followed by integers, followed by rationals.
+
 ```julia-repl
 julia> W=BigWittVectorRing(ZZ, 8) #everything is lightning quick at low degree
 Big Witt vector ring represented up to degree 8 over Integers
@@ -422,4 +325,49 @@ julia> @time p1+p2; @time p1+p2;
 ```
 ## Using other parts of OSCAR with WittVectors.jl
 
+WittVectors.jl gets along just fine with Hecke.jl as well as any other ring instance conformant to AbstractAlgebra.jl's [ring interface](https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/). 
+However, some care must be taken to manage conflicts between those packages and one of AbstractAlgebra.jl or WittVectors.jl.
+### Example:
+```julia-repl
 
+julia> using WittVectors, AbstractAlgebra,Hecke
+
+Welcome to 
+
+    _    _           _
+   | |  | |         | |
+   | |__| | ___  ___| | _____
+   |  __  |/ _ \\/ __| |/ / _ \\
+   | |  | |  __/ (__|   <  __/
+   |_|  |_|\\___|\\___|_|\\_\\___|
+    
+Version 0.14.2 ... 
+ ... which comes with absolutely no warranty whatsoever
+(c) 2015-2021 by Claus Fieker, Tommy Hofmann and Carlo Sircana
+
+
+julia> Qx, x = PolynomialRing(FlintQQ, "x")
+(Univariate Polynomial Ring in x over Rational Field, x)
+
+julia> f = x^2 + 7
+x^2 + 7
+
+julia> K, a = NumberField(f, "a")
+WARNING: both Hecke and AbstractAlgebra export "NumberField"; uses of it in module Main must be qualified
+ERROR: UndefVarError: NumberField not defined
+Stacktrace:
+ [1] top-level scope
+   @ REPL[4]:1
+
+julia> K, a = Hecke.NumberField(f, "a")
+(Number field over Rational Field with defining polynomial x^2 + 7, a)
+
+julia> W=BigWittVectorRing(K, 16)
+Big Witt vector ring represented up to degree 16 over Number field over Rational Field with defining polynomial x^2 + 7
+
+
+julia> w=rand(W, -99:99)
+nf_elem[-15//31*a + 16//45, -45//83*a + 38, 13//45*a + 7//3, -95//39*a - 47//34, -22//9*a - 57//44, -29//66*a + 16//11, 47//4*a + 13//6, 45//31*a - 21//94, -8//65*a + 67//13, -41//19*a + 11//9, -98//57*a + 75//83, -20//13*a - 19//13, -41//40*a + 29//5, -39//16*a - 91//45, 81//5*a - 27//40, -33//32*a + 42//29]
+
+julia> w^2
+nf_elem[-32//93*a - 2943359//1946025, -383772122//3589335*a + 37085788053574//13406166225, 721333971836//122161719375*a + 33938130884//8144114625, 47255854807909406865792166//287127395568904307625*a - 3032705341779982679482034582662//1755592605640137238255125, 1213858003577266487//95091903978693750*a - 759287183100790280747//3409220853754650000, 305511944952747451043718774194787242278709//474192680826090146218629109453125*a - 5749964944464486837633207058435777487183513461//1180739775256964464084386482538281250, 7806409201082831635477129//41122493875586112187500*a - 3265220599746469324240462397//493469926507033346250000, 2789006839176288370464876388819225384146479495324771646433952//1224071188845178435009607006422512841910384296875*a - 31944824358108210740867255235233556080939157120399384617065755493733//2451013495893044309192324288478928708135639169975625000, 203992719446633012992610635292498804462//308100295199099993704015849365234375*a + 10349781213619300819444928930820682043//6846673226646666526755907763671875, 6653679202855110576295249020004254927459163586710708153640725752442363//1151476586786216014506749985411880602998747715937500000*a - 633072647820205728261076774353263721006538048913965790345217592502211139309477//23729901248964821173934527292364592670420500634500961250000000, -6802378524049568383109101308139466745278//184191350324793074224242567126416015625*a - 110971748540496009339562887905118139328449//258195341744176602712560469651873828125, 2785215083583212028479577025672985838634814110579552408785589030425287348504055574543057279521395281//147584385910140562031378207065212660100744563631729498807549294324491851806640625*a - 22535484532069155853387843322949121659906431526425535434022365474869139348484729008950842455000230509703103//324856846889964999520988454263663498907354903683617703595225204695298484522705078125000, 60229692413611377202701957273081214154047249//1515286292605391850632980941416967773437500*a + 8998197280444521157888313943964800682711659907//24244580681686269610127695062671484375000000, 16097365470982127237931364918187537281188017168224980874431345625968441199597816795962239036263//360068667721191680426116275158034077143805137934755124680319531250000000*a - 121596352268799853217590631885735002714654050774564932473999842961198269768444959031759660372667843//896570982625767284261029525143504852088074793457540260453995632812500000000, -38249906521610790634094229780524587741140955751529607689057602960863//67982186702809718873567374660693209049657118994140625000000000*a + 326898172910831031558959223132026647571972498914077999738242344092971//109677927880533013116022031119251710600113485310546875000000000, 2652186386110661425369870962210273943902004750799140983762650082529771482757114027516258283260632657055289969211490186611345893702893//17401247022001578590988781041570112803260723915923431496030706452830054712273025228848039263779296875000000*a - 179957470708831799431423116180186647863084162961202734941261229629639721800622136771479518290101172750246156385328815460342154954465327448454173//485524096379483962315003674170586517110019851656810006098527011568976176209075278999358785626876314754726562500000000]
