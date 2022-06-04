@@ -54,6 +54,7 @@ truncationbools
 truncationlist
 divisor_stabilize
 truncate
+truncationgens
 ```
 
 ```@index

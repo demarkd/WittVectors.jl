@@ -291,6 +291,91 @@ function truncate!(w::TruncatedWittVector)
 	w.xcoords= X .* S
 	return w
 end
+function not_all_false(S::Vector{Bool})
+	return reduce((x,y)-> x|| y, S)
+end
+"""
+    function truncationgens(S_given::Vector{Bool})
+Return unique set of irredundant generators for the divisor-stabilization of `S_given`. That is, returns the smallest-length integer vector `[a_1, a_2, ...]` such that `divisor_stabilize(truncationbools([a_1,a_2,...]))==divisor_stabilize(S_given). Partial inverse to `divisor_stabilize` ∘ `truncationbools`.
+## Example:
+```jldoctest
+```
+julia> S=divisor_stabilize(truncationbools([32, 48, 104]))
+104-element Vector{Bool}:
+ 1
+ 1
+ 1
+ 1
+ 0
+ 1
+ 0
+ 1
+ 0
+ 0
+ 0
+ ⋮
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 1
+
+julia> truncationgens(S)
+3-element Vector{Int64}:
+ 104
+  48
+  32
+
+julia> S=divisor_stabilize(truncationbools([32, 48, 104,96]))
+104-element Vector{Bool}:
+ 1
+ 1
+ 1
+ 1
+ 0
+ 1
+ 0
+ 1
+ 0
+ 0
+ 0
+ ⋮
+ 0
+ 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 1
+
+julia> truncationgens(S)
+2-element Vector{Int64}:
+ 104
+  96
+"""
+function truncationgens(S_given::Vector{Bool})
+	S=deepcopy(divisor_stabilize(S_given))
+	genlist=Int64[]
+	while not_all_false(S)
+		Sl=truncationlist(S)
+		generator=reduce(max,Sl)
+		genlist=vcat(genlist,[generator])
+		for i in 1:generator
+		    if (generator%i == 0)  
+			    S[i]=false
+		    end
+		end
+	end
+	return genlist
+end
 
 ############
 #String I/O#

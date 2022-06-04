@@ -55,11 +55,24 @@ function investigate_ptypical_verbose(p::Integer, mcap::Integer, degree::Integer
 	Ss=fill([p^degree],mcap)
 	return logexponents_verbose(Ps, Ms, Ss)
 end
+function make_coprime(a:: Integer, p:: Integer)
+	fdic=factor(a)
+	m=fdic[p]
+	return a÷p^m
+end
 function investigate_random_2gen_verbose(p::Integer, mcap::Integer)
 	Ps=broadcast((x->p*x), vec(ones(Int64, mcap)))
 	Ms=collect(1:mcap)
 	a=rand(1:999)
 	b=rand(1:999)
+	Ss=fill([a,b],mcap)
+	return logexponents_verbose(Ps, Ms, Ss)
+end
+function investigate_random_2gen_coprime_verbose(p::Integer, mcap::Integer)
+	Ps=broadcast((x->p*x), vec(ones(Int64, mcap)))
+	Ms=collect(1:mcap)
+	a=make_coprime(rand(1:999),p)
+	b=make_coprime(rand(1:999),p)
 	Ss=fill([a,b],mcap)
 	return logexponents_verbose(Ps, Ms, Ss)
 end
@@ -70,3 +83,16 @@ function investigate_many_random_2gen(pcap::Integer, mcap::Integer)
 	return view_expdata()
 end
 
+function investigate_many_coprime_2gen(pcap::Integer, mcap::Integer)
+	for p in primes(pcap)
+		investigate_random_2gen_coprime_verbose(p,mcap)
+	end
+	return view_expdata()
+end
+function investigate_many_for_single_prime(p::Integer,reps::Integer,mcap::Integer=1)
+	for i in 1:reps
+		investigate_random_2gen_coprime_verbose(p,mcap)
+	end
+	return view_expdata()
+end
+	

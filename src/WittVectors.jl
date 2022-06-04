@@ -11,7 +11,7 @@ import AbstractAlgebra: parent_type, elem_type, base_ring, parent, is_domain_typ
 #consider renaming truncate function to avoid adding new method to AbstractAlgebra.truncate (toQuotient?)
 import Base: show, +, -, *, ^, ==, inv, isone, iszero, one, zero, rand, deepcopy, deepcopy_internal, hash, parent
 
-export BigWittRing, BigWittVectorRing, WittVector, TruncatedBigWittRing, TruncatedWittVector, TruncatedBigWittVectorRing, pTypicalWittVectorRing, truncate, isconstant, zero, one, isone, iszero, truncationbools, truncationlist, divisor_stabilize, project, ghostmap
+export BigWittRing, BigWittVectorRing, WittVector, TruncatedBigWittRing, TruncatedWittVector, TruncatedBigWittVectorRing, pTypicalWittVectorRing, truncate, isconstant, zero, one, isone, iszero, truncationbools, truncationlist, divisor_stabilize, project, ghostmap, truncationgens
 @doc raw"""
 	mutable struct BigWittRing{T <: RingElement} <: Ring
 Parent object type for Big Witt Rings (i.e. truncated only by a maximum precision rather than a more general divisor-stable set). Should be constructed using the exported constructors, although I think it's basically safe to call WittVectors.BigWittRing directly.
