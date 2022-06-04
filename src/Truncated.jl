@@ -299,7 +299,6 @@ end
 Return unique set of irredundant generators for the divisor-stabilization of `S_given`. That is, returns the smallest-length integer vector `[a_1, a_2, ...]` such that `divisor_stabilize(truncationbools([a_1,a_2,...]))==divisor_stabilize(S_given). Partial inverse to `divisor_stabilize` ∘ `truncationbools`.
 ## Example:
 ```jldoctest
-```
 julia> S=divisor_stabilize(truncationbools([32, 48, 104]))
 104-element Vector{Bool}:
  1
@@ -360,6 +359,7 @@ julia> truncationgens(S)
 2-element Vector{Int64}:
  104
   96
+```
 """
 function truncationgens(S_given::Vector{Bool})
 	S=deepcopy(divisor_stabilize(S_given))
