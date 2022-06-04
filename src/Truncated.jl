@@ -299,63 +299,19 @@ end
 Return unique set of irredundant generators for the divisor-stabilization of `S_given`. That is, returns the smallest-length integer vector `[a_1, a_2, ...]` such that `divisor_stabilize(truncationbools([a_1,a_2,...]))==divisor_stabilize(S_given). Partial inverse to `divisor_stabilize` ∘ `truncationbools`.
 ## Example:
 ```jldoctest
-julia> S=divisor_stabilize(truncationbools([32, 48, 104]))
-104-element Vector{Bool}:
- 1
- 1
- 1
- 1
- 0
- 1
- 0
- 1
- 0
- 0
- 0
- ⋮
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 1
+julia> using WittVectors
 
-julia> truncationgens(S)
+julia> S1=divisor_stabilize(truncationbools([32, 48, 104]));
+
+julia> truncationgens(S1)
 3-element Vector{Int64}:
  104
   48
   32
 
-julia> S=divisor_stabilize(truncationbools([32, 48, 104,96]))
-104-element Vector{Bool}:
- 1
- 1
- 1
- 1
- 0
- 1
- 0
- 1
- 0
- 0
- 0
- ⋮
- 0
- 1
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 1
+julia> S2=divisor_stabilize(truncationbools([32, 48, 104,96]));
 
-julia> truncationgens(S)
+julia> truncationgens(S2)
 2-element Vector{Int64}:
  104
   96
