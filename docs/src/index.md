@@ -2,7 +2,7 @@
 ## Installation
 These installation instructions assume Git and Julia 1.7.x or later are already installed.
 
-To add WittVEctors to your current project's registry, the following should work:
+To add WittVectors to your current project's registry, the following should work:
 ```julia-repl
 julia> using Pkg; Pkg.add https://github.com/demarkd/WittVectors.jl
 
@@ -103,7 +103,7 @@ true
 ```
 ### Truncating
 
-We can quotient `WittVector`s to `TruncatedWittVector`s and `BigWittRing`s to ` using the `truncate` function.
+We can quotient `WittVector`s to `TruncatedWittVector`s and `BigWittRing`s to `TruncatedBigWittRing`s using the `truncate` function.
 ### Example
 ```jldoctest
 julia> using AbstractAlgebra, WittVectors;
@@ -476,6 +476,6 @@ nmod[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 
 ## Ring Structure
 I've made some preliminary progress towards determining the ring structure of ``W_S(\mathbb{Z}/p^m)``. I do have a (conjectural, but should be doable to prove) formula depending on ``S`` for the value of ``N`` such that ``p^N`` annihilates ``W_S(\mathbb{Z}/p^m)``. Namely, let ``a=\max_{s\in S}(v_p(s))`` where ``v_p`` is p-adic valuation. Then, ``N=m+a``. This is borne out by testing over 1,129 combinations of ``(p,m,S)``, with the truncation sets ``S`` mostly randomly generated and the primes ``p`` ranging from 2 to 199. 
 
-None of the methods used or data generated in this investigation is actually exported by `WittVectors.jl`. To find that, determine the root folder of your installation of WittVectors.jl or manually clone it to the destination of your choice. Then, you can load the ring structure testing interface with `include("<path-to-WittVectors.jl>/data/RingStructure.jl"). The fundamental method for generating data is `logexponents_verbose(Ps::Vector{Int64}, Ms::Vector{Int64}, Ss::Vector{Vector{Int64}})`. This takes as arguments a vector of primes `Ps`, a vector of exponents `Ms` and a vector of truncation sets (represented as integer vectors, not necessarily divisor stable), all of equal length, and returns a table with columns `p`, `m`, `S` and `N`, where `N` is the minimal value such that ``p^N W_S(\mathbb{Z}/p^m)=0`` and logs it to disk. The full table of all attempts can be viewed with `view_expdata`. The table can be manipulated using `map`, `filter` and `transform` as provided by JuliaDB.jl
+None of the methods used or data generated in this investigation is actually exported by `WittVectors.jl`. To find that, determine the root folder of your installation of WittVectors.jl or manually clone it to the destination of your choice. Then, you can load the ring structure testing interface with `include("<path-to-WittVectors.jl>/data/RingStructure.jl")`. The fundamental method for generating data is `logexponents_verbose(Ps::Vector{Int64}, Ms::Vector{Int64}, Ss::Vector{Vector{Int64}})`. This takes as arguments a vector of primes `Ps`, a vector of exponents `Ms` and a vector of truncation sets (represented as integer vectors, not necessarily divisor stable), all of equal length, and returns a table with columns `p`, `m`, `S` and `N`, where `N` is the minimal value such that ``p^N W_S(\mathbb{Z}/p^m)=0`` and logs it to disk. The full table of all attempts can be viewed with `view_expdata`. The table can be manipulated using `map`, `filter` and `transform` as provided by [JuliaDB.jl](https://juliadb.juliadata.org/latest/api/).
 
-The obvious next step which I have not yet meaningfully embarked on is determining the rest of the ``\mathbb{Z}/p^N``-algebra structure of ``W_S(\mathbb{Z}/p^m)``. From the above, a naive guess may be 
+The obvious next step which I have not yet meaningfully embarked on is determining the rest of the ``\mathbb{Z}/p^N``-algebra structure of ``W_S(\mathbb{Z}/p^m)``.
