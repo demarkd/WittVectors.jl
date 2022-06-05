@@ -333,74 +333,74 @@ julia&gt; @time w2^2;
   0.166940 seconds (290.79 k allocations: 65.720 MiB, 16.72% gc time)
 gfp_elem[16, 16, 18, 1, 6, 8, 15, 15] truncated over [1, 2, 4, 8, 16, 32, 64, 128]
 
-julia&gt; W1=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ,23^2),[64])#attempting to search for largest feasible computation in the AbstractAlgebra.jl implementations. 
+julia&gt; W3=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ,23^2),[64])#attempting to search for largest feasible computation in the AbstractAlgebra.jl implementations. 
 Witt vector ring over Residue ring of Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64]
 
-julia&gt; w1=rand(W1, 1:23^2)
+julia&gt; w3=rand(W3, 1:23^2)
 AbstractAlgebra.Generic.Res{BigInt}[312, 251, 192, 386, 317, 210, 410] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia&gt; @time w1^2;
-       @time w1^2
+julia&gt; @time w3^2;
+       @time w3^2
   5.631181 seconds (57.02 M allocations: 1.402 GiB, 41.83% gc time, 4.79% compilation time)
   5.061482 seconds (56.58 M allocations: 1.379 GiB, 40.66% gc time)
 AbstractAlgebra.Generic.Res{BigInt}[8, 413, 449, 213, 406, 405, 105] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia&gt; W2=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [64])
+julia&gt; W4=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [64])
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64]
 
-julia&gt; w2=W2([312, 251, 192, 386, 317, 210, 410])
+julia&gt; w4=W4([312, 251, 192, 386, 317, 210, 410])
 nmod[312, 251, 192, 386, 317, 210, 410] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia&gt; @time w2^2;
-       @time w2^2
+julia&gt; @time w4^2;
+       @time w4^2
   1.262894 seconds (2.40 M allocations: 137.847 MiB, 2.79% gc time, 98.68% compilation time)
   0.018759 seconds (74.56 k allocations: 10.318 MiB)
 nmod[8, 413, 449, 213, 406, 405, 105] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia&gt; W3=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [256]) #Nemo on the other hand can handle much larger degrees
+julia&gt; W5=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [256]) #Nemo on the other hand can handle much larger degrees
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; w3=rand(W3)
+julia&gt; w5=rand(W5)
 nmod[108, 186, 449, 306, 219, 462, 50, 391, 425] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; @time w3^2;
-       @time w3^2
+julia&gt; @time w5^2;
+       @time w5^2
   1.107194 seconds (1.15 M allocations: 454.734 MiB, 7.91% gc time)
   1.066501 seconds (1.15 M allocations: 454.734 MiB, 7.65% gc time)
 nmod[26, 43, 445, 351, 451, 162, 353, 426, 176] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; W4=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [1024]) #MUCH larger.
+julia&gt; W6=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [1024]) #MUCH larger.
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
 
-julia&gt; w4=rand(W4)
+julia&gt; w6=rand(W6)
 nmod[43, 432, 164, 463, 90, 508, 520, 70, 336, 179, 60] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024] #This is likely basically unreachable for the AA.jl implementation, although I haven&#39;t let such a computation run long enough to know for sure it&#39;s not in the &quot;hours-to-days&quot; category. 
 
-julia&gt; @time w4^2;
-       @time w4^2
+julia&gt; @time w6^2;
+       @time w6^2
  70.405314 seconds (18.62 M allocations: 30.544 GiB, 2.46% gc time)
  71.077432 seconds (18.62 M allocations: 30.544 GiB, 2.33% gc time)
 nmod[262, 259, 142, 509, 41, 295, 282, 133, 302, 445, 227] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
 
-julia&gt; W5=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ, 23^2),[256])
+julia&gt; W7=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ, 23^2),[256])
 Witt vector ring over Residue ring of Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; w5=rand(W5,1:23^2)
+julia&gt; w7=rand(W7,1:23^2)
 AbstractAlgebra.Generic.Res{BigInt}[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; @time w5^2;
-       @time w5^2
+julia&gt; @time w7^2;
+       @time w7^2
 944.823928 seconds (7.45 G allocations: 188.632 GiB, 39.14% gc time)
 984.901435 seconds (7.45 G allocations: 188.632 GiB, 38.36% gc time)
 AbstractAlgebra.Generic.Res{BigInt}[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; W6=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ, 23^2),[256])
+julia&gt; W8=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ, 23^2),[256])
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; w6=W6([137, 478, 323, 93, 438, 270, 58, 322, 26])
+julia&gt; w8=W8([137, 478, 323, 93, 438, 270, 58, 322, 26])
 nmod[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia&gt; @time w6^2;
-       @time w6^2 #over 60 times faster
+julia&gt; @time w8^2;
+       @time w8^2 #over 60 times faster
   2.602091 seconds (4.25 M allocations: 628.009 MiB, 5.14% gc time, 58.33% compilation time)
   1.082737 seconds (1.15 M allocations: 454.736 MiB, 7.32% gc time)
-nmod[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]</code></pre><h2 id="Ring-Structure"><a class="docs-heading-anchor" href="#Ring-Structure">Ring Structure</a><a id="Ring-Structure-1"></a><a class="docs-heading-anchor-permalink" href="#Ring-Structure" title="Permalink"></a></h2><p>I&#39;ve made some preliminary progress towards determining the ring structure of <span>$W_S(\mathbb{Z}/p^m)$</span>. I do have a (conjectural, but should be doable to prove) formula depending on <span>$S$</span> for the value of <span>$N$</span> such that <span>$p^N$</span> annihilates <span>$W_S(\mathbb{Z}/p^m)$</span>. Namely, let <span>$a=\max_{s\in S}(v_p(s))$</span> where <span>$v_p$</span> is p-adic valuation. Then, <span>$N=m+a$</span>. This is borne out by testing over 1,129 combinations of <span>$(p,m,S)$</span>, with the truncation sets <span>$S$</span> mostly randomly generated and the primes <span>$p$</span> ranging from 2 to 199. </p><p>None of the methods used or data generated in this investigation is actually exported by <code>WittVectors.jl</code>. To find that, determine the root folder of your installation of WittVectors.jl or manually clone it to the destination of your choice. Then, you can load the ring structure testing interface with <code>include(&quot;&lt;path-to-WittVectors.jl&gt;/data/RingStructure.jl&quot;)</code>. The fundamental method for generating data is <code>logexponents_verbose(Ps::Vector{Int64}, Ms::Vector{Int64}, Ss::Vector{Vector{Int64}})</code>. This takes as arguments a vector of primes <code>Ps</code>, a vector of exponents <code>Ms</code> and a vector of truncation sets (represented as integer vectors, not necessarily divisor stable), all of equal length, and returns a table with columns <code>p</code>, <code>m</code>, <code>S</code> and <code>N</code>, where <code>N</code> is the minimal value such that <span>$p^N W_S(\mathbb{Z}/p^m)=0$</span> and logs it to disk. The full table of all attempts can be viewed with <code>view_expdata</code>. The table can be manipulated using <code>map</code>, <code>filter</code> and <code>transform</code> as provided by <a href="https://juliadb.juliadata.org/latest/api/">JuliaDB.jl</a>.</p><p>The obvious next step which I have not yet meaningfully embarked on is determining the rest of the <span>$\mathbb{Z}/p^N$</span>-algebra structure of <span>$W_S(\mathbb{Z}/p^m)$</span>.</p><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-Kedlaya"><a class="tag is-link" href="#citeref-Kedlaya">Kedlaya</a>Kiran S. Kedlaya, Notes on Prismatic Cohomology. <a href="https://kskedlaya.org/prismatic/sec_lambda-rings.html">(Link to course notes)</a></li><li class="footnote" id="footnote-Hazewinkel"><a class="tag is-link" href="#citeref-Hazewinkel">Hazewinkel</a>Michiel Hazewinkel, Witt vectors. Part 1. Eqn (9.27). <a href="https://arxiv.org/abs/0804.3888">(arXiv)</a></li></ul></section></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="fulldocs/">Full Documentation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Sunday 5 June 2022 22:34">Sunday 5 June 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+nmod[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]</code></pre><h2 id="Ring-Structure"><a class="docs-heading-anchor" href="#Ring-Structure">Ring Structure</a><a id="Ring-Structure-1"></a><a class="docs-heading-anchor-permalink" href="#Ring-Structure" title="Permalink"></a></h2><p>I&#39;ve made some preliminary progress towards determining the ring structure of <span>$W_S(\mathbb{Z}/p^m)$</span>. I do have a (conjectural, but should be doable to prove) formula depending on <span>$S$</span> for the value of <span>$N$</span> such that <span>$p^N$</span> annihilates <span>$W_S(\mathbb{Z}/p^m)$</span>. Namely, let <span>$a=\max_{s\in S}(v_p(s))$</span> where <span>$v_p$</span> is p-adic valuation. Then, <span>$N=m+a$</span>. This is borne out by testing over 1,129 combinations of <span>$(p,m,S)$</span>, with the truncation sets <span>$S$</span> mostly randomly generated and the primes <span>$p$</span> ranging from 2 to 199. </p><p>None of the methods used or data generated in this investigation is actually exported by <code>WittVectors.jl</code>. To find that, determine the root folder of your installation of WittVectors.jl or manually clone it to the destination of your choice. Then, you can load the ring structure testing interface with <code>include(&quot;&lt;path-to-WittVectors.jl&gt;/data/RingStructure.jl&quot;)</code>. The fundamental method for generating data is <code>logexponents_verbose(Ps::Vector{Int64}, Ms::Vector{Int64}, Ss::Vector{Vector{Int64}})</code>. This takes as arguments a vector of primes <code>Ps</code>, a vector of exponents <code>Ms</code> and a vector of truncation sets (represented as integer vectors, not necessarily divisor stable), all of equal length, and returns a table with columns <code>p</code>, <code>m</code>, <code>S</code> and <code>N</code>, where <code>N</code> is the minimal value such that <span>$p^N W_S(\mathbb{Z}/p^m)=0$</span> and logs it to disk. The full table of all attempts can be viewed with <code>view_expdata</code>. The table can be manipulated using <code>map</code>, <code>filter</code> and <code>transform</code> as provided by <a href="https://juliadb.juliadata.org/latest/api/">JuliaDB.jl</a>.</p><p>The obvious next step which I have not yet meaningfully embarked on is determining the rest of the <span>$\mathbb{Z}/p^N$</span>-algebra structure of <span>$W_S(\mathbb{Z}/p^m)$</span>.</p><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-Kedlaya"><a class="tag is-link" href="#citeref-Kedlaya">Kedlaya</a>Kiran S. Kedlaya, Notes on Prismatic Cohomology. <a href="https://kskedlaya.org/prismatic/sec_lambda-rings.html">(Link to course notes)</a></li><li class="footnote" id="footnote-Hazewinkel"><a class="tag is-link" href="#citeref-Hazewinkel">Hazewinkel</a>Michiel Hazewinkel, Witt vectors. Part 1. Eqn (9.27). <a href="https://arxiv.org/abs/0804.3888">(arXiv)</a></li></ul></section></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="fulldocs/">Full Documentation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Sunday 5 June 2022 22:36">Sunday 5 June 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
