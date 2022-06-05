@@ -400,74 +400,74 @@ julia> @time w2^2;
   0.166940 seconds (290.79 k allocations: 65.720 MiB, 16.72% gc time)
 gfp_elem[16, 16, 18, 1, 6, 8, 15, 15] truncated over [1, 2, 4, 8, 16, 32, 64, 128]
 
-julia> W1=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ,23^2),[64])#attempting to search for largest feasible computation in the AbstractAlgebra.jl implementations. 
+julia> W3=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ,23^2),[64])#attempting to search for largest feasible computation in the AbstractAlgebra.jl implementations. 
 Witt vector ring over Residue ring of Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64]
 
-julia> w1=rand(W1, 1:23^2)
+julia> w3=rand(W3, 1:23^2)
 AbstractAlgebra.Generic.Res{BigInt}[312, 251, 192, 386, 317, 210, 410] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia> @time w1^2;
-       @time w1^2
+julia> @time w3^2;
+       @time w3^2
   5.631181 seconds (57.02 M allocations: 1.402 GiB, 41.83% gc time, 4.79% compilation time)
   5.061482 seconds (56.58 M allocations: 1.379 GiB, 40.66% gc time)
 AbstractAlgebra.Generic.Res{BigInt}[8, 413, 449, 213, 406, 405, 105] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia> W2=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [64])
+julia> W4=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [64])
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64]
 
-julia> w2=W2([312, 251, 192, 386, 317, 210, 410])
+julia> w4=W4([312, 251, 192, 386, 317, 210, 410])
 nmod[312, 251, 192, 386, 317, 210, 410] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia> @time w2^2;
-       @time w2^2
+julia> @time w4^2;
+       @time w4^2
   1.262894 seconds (2.40 M allocations: 137.847 MiB, 2.79% gc time, 98.68% compilation time)
   0.018759 seconds (74.56 k allocations: 10.318 MiB)
 nmod[8, 413, 449, 213, 406, 405, 105] truncated over [1, 2, 4, 8, 16, 32, 64]
 
-julia> W3=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [256]) #Nemo on the other hand can handle much larger degrees
+julia> W5=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [256]) #Nemo on the other hand can handle much larger degrees
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> w3=rand(W3)
+julia> w5=rand(W5)
 nmod[108, 186, 449, 306, 219, 462, 50, 391, 425] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> @time w3^2;
-       @time w3^2
+julia> @time w5^2;
+       @time w5^2
   1.107194 seconds (1.15 M allocations: 454.734 MiB, 7.91% gc time)
   1.066501 seconds (1.15 M allocations: 454.734 MiB, 7.65% gc time)
 nmod[26, 43, 445, 351, 451, 162, 353, 426, 176] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> W4=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [1024]) #MUCH larger.
+julia> W6=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [1024]) #MUCH larger.
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
 
-julia> w4=rand(W4)
+julia> w6=rand(W6)
 nmod[43, 432, 164, 463, 90, 508, 520, 70, 336, 179, 60] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024] #This is likely basically unreachable for the AA.jl implementation, although I haven't let such a computation run long enough to know for sure it's not in the "hours-to-days" category. 
 
-julia> @time w4^2;
-       @time w4^2
+julia> @time w6^2;
+       @time w6^2
  70.405314 seconds (18.62 M allocations: 30.544 GiB, 2.46% gc time)
  71.077432 seconds (18.62 M allocations: 30.544 GiB, 2.33% gc time)
 nmod[262, 259, 142, 509, 41, 295, 282, 133, 302, 445, 227] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
 
-julia> W5=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ, 23^2),[256])
+julia> W7=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ, 23^2),[256])
 Witt vector ring over Residue ring of Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> w5=rand(W5,1:23^2)
+julia> w7=rand(W7,1:23^2)
 AbstractAlgebra.Generic.Res{BigInt}[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> @time w5^2;
-       @time w5^2
+julia> @time w7^2;
+       @time w7^2
 944.823928 seconds (7.45 G allocations: 188.632 GiB, 39.14% gc time)
 984.901435 seconds (7.45 G allocations: 188.632 GiB, 38.36% gc time)
 AbstractAlgebra.Generic.Res{BigInt}[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> W6=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ, 23^2),[256])
+julia> W8=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ, 23^2),[256])
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> w6=W6([137, 478, 323, 93, 438, 270, 58, 322, 26])
+julia> w8=W8([137, 478, 323, 93, 438, 270, 58, 322, 26])
 nmod[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> @time w6^2;
-       @time w6^2 #over 60 times faster
+julia> @time w8^2;
+       @time w8^2 #over 60 times faster
   2.602091 seconds (4.25 M allocations: 628.009 MiB, 5.14% gc time, 58.33% compilation time)
   1.082737 seconds (1.15 M allocations: 454.736 MiB, 7.32% gc time)
 nmod[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
