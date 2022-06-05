@@ -102,4 +102,17 @@ function investigate_many_for_single_prime(p::Integer,reps::Integer,mcap::Intege
 	end
 	return view_expdata()
 end
-	
+function max_p_divisibility(p::Integer, S::Vector{Int64})
+	S_valuation=Int64[]
+	for i in eachindex(S)
+		v=0
+		a=deepcopy(S[i])
+		while a%p==0
+			v+=1
+			a= a ÷p
+		end
+		S_valuation=vcat(S_valuation,[v])
+	end
+	return reduce(max, S_valuation)
+end
+
