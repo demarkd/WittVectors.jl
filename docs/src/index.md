@@ -467,3 +467,6 @@ julia> @time w6^2;
   1.082737 seconds (1.15 M allocations: 454.736 MiB, 7.32% gc time)
 nmod[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 ```
+
+## Ring Structure
+I've made some preliminary progress towards determining the ring structure of ``W_S(\mathbb{Z}/p^m)``. 
