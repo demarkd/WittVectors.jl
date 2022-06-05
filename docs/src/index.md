@@ -145,7 +145,12 @@ true
 julia> truncate(w,S)==w_S
 true
 ```
+## Testing
+For each push to WittVectors.jl, a GitHub Actions workflow is run that evaluates the file `test/runtests.jl` as well as another that runs all the doctests (all of the REPL examples in this documentation are doctests except for those in the sections of this overview to follow). `runtests.jl` initiates four sets of tests: two sets of AbstractAlgebra.jl's ring interface tests (as indicated at the [bottom of the ring interface documentation](https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/#Minimal-example-of-ring-implementation), which use the random interface check that each of the two ring data types implemented in WittVectors.jl are indeed rings (probablistically, anyway), and a custom set of two tests which check that indeed the ghost maps are a ring homomorphism to confirm that the ring in question is indeed a ring of Witt vectors. Each of these are performed for both ``\mathbb{ZZ}`` and ``\mathbb{F}_7`` to ensure compliance in both characteristic ``p`` and characteristic ``0``. 
 ## Performance and Limitations
+!!! info
+	The following only regards the performance of the "pure Julia" aspects of WittVectors.jl, that is its functionality when used *only* with AbstractAlgebra.jl. For more information on performance when used with other libraries, see the section below. 
+	
 Well its a dang sure lot faster than my previous implementation of the p-Typical Witt Vectors in Sagemath last fall (which used the universal polynomial approach--bad idea).
 
 More seriously, WittVectors.jl works about as quick as you could hope up to indices of somewhere in the low hundreds--from there it begins to get slow. More optimization is needed on some performance-critical algorithms. Two places likely needing improvement are `WittVectors.getcoords`, which transforms an element in ``1+R[[T]]`` to its so-called Witt coordinates by inverting the formula [^Kedlaya] ``(x_0, x_1, \dots) \mapsto \prod (1-x_n T^n)``, and `WittVectors.multseries` which applies the formula [^Hazewinkel] ``\left(\prod (1-x_n T^n)\right)\otimes \left(\prod (1-y_n T^n\right)=\prod_{r,s} \left(1-x^{s/\mathrm{gcd}(r,s)}y^{r/\mathrm{gcd}(r,s)}t^{\mathrm{lcm}(r,s)}\right)^{-\mathrm{gcd}(r,s)}``.
