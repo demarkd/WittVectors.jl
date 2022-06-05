@@ -451,7 +451,7 @@ nmod[262, 259, 142, 509, 41, 295, 282, 133, 302, 445, 227] truncated over [1, 2,
 julia> W5=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ, 23^2),[256])
 Witt vector ring over Residue ring of Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> w5=rand(W6,1:23^2)
+julia> w5=rand(W5,1:23^2)
 AbstractAlgebra.Generic.Res{BigInt}[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
 julia> @time w5^2;
@@ -460,10 +460,10 @@ julia> @time w5^2;
 984.901435 seconds (7.45 G allocations: 188.632 GiB, 38.36% gc time)
 AbstractAlgebra.Generic.Res{BigInt}[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> W7=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ, 23^2),[256])
+julia> W6=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ, 23^2),[256])
 Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
-julia> w7=W7([137, 478, 323, 93, 438, 270, 58, 322, 26])
+julia> w6=W6([137, 478, 323, 93, 438, 270, 58, 322, 26])
 nmod[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
 julia> @time w6^2;
