@@ -467,7 +467,7 @@ julia> w8=W8([137, 478, 323, 93, 438, 270, 58, 322, 26])
 nmod[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
 
 julia> @time w8^2;
-       @time w8^2 #over 60 times faster
+       @time w8^2 #over 800 times faster
   2.602091 seconds (4.25 M allocations: 628.009 MiB, 5.14% gc time, 58.33% compilation time)
   1.082737 seconds (1.15 M allocations: 454.736 MiB, 7.32% gc time)
 nmod[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
