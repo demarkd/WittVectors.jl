@@ -305,16 +305,16 @@ julia> S1=divisor_stabilize(truncationbools([32, 48, 104]));
 
 julia> truncationgens(S1)
 3-element Vector{Int64}:
- 104
-  48
   32
+  48
+ 104
 
 julia> S2=divisor_stabilize(truncationbools([32, 48, 104,96]));
 
 julia> truncationgens(S2)
 2-element Vector{Int64}:
- 104
   96
+ 104
 ```
 """
 function truncationgens(S_given::Vector{Bool})
@@ -323,7 +323,7 @@ function truncationgens(S_given::Vector{Bool})
 	while not_all_false(S)
 		Sl=truncationlist(S)
 		generator=reduce(max,Sl)
-		genlist=vcat(genlist,[generator])
+		genlist=vcat([generator],genlist)
 		for i in 1:generator
 		    if (generator%i == 0)  
 			    S[i]=false

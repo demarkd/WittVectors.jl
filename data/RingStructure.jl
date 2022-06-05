@@ -56,9 +56,13 @@ function investigate_ptypical_verbose(p::Integer, mcap::Integer, degree::Integer
 	return logexponents_verbose(Ps, Ms, Ss)
 end
 function make_coprime(a:: Integer, p:: Integer)
-	fdic=factor(a)
-	m=fdic[p]
-	return a÷p^m
+	if a % p == 0 
+		fdic=Nemo.factor(a)
+		m=fdic[p]
+		return a÷p^m
+	else
+		return a
+	end
 end
 function investigate_random_2gen_verbose(p::Integer, mcap::Integer)
 	Ps=broadcast((x->p*x), vec(ones(Int64, mcap)))
@@ -90,8 +94,11 @@ function investigate_many_coprime_2gen(pcap::Integer, mcap::Integer)
 	return view_expdata()
 end
 function investigate_many_for_single_prime(p::Integer,reps::Integer,mcap::Integer=1)
+	n=0
 	for i in 1:reps
 		investigate_random_2gen_coprime_verbose(p,mcap)
+		n+=1
+		println("repetition $n/$reps complete")
 	end
 	return view_expdata()
 end

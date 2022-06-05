@@ -327,20 +327,13 @@ julia> @time p1+p2; @time p1+p2;
 
 WittVectors.jl gets along just fine with Hecke.jl as well as any other ring instance conformant to AbstractAlgebra.jl's [ring interface](https://nemocas.github.io/AbstractAlgebra.jl/dev/ring_interface/). 
 However, some care must be taken to manage conflicts between those packages and one of AbstractAlgebra.jl or WittVectors.jl.
+
 ### Example:
 ```julia-repl
 
-julia> using WittVectors, AbstractAlgebra,Hecke
+julia> using WittVectors, AbstractAlgebra,Hecke, Nemo
 
-Welcome to 
-
-    _    _           _
-   | |  | |         | |
-   | |__| | ___  ___| | _____
-   |  __  |/ _ \\/ __| |/ / _ \\
-   | |  | |  __/ (__|   <  __/
-   |_|  |_|\\___|\\___|_|\\_\\___|
-    
+Welcome to Hecke #logo suppressed due to declaring fixing escape character issues not worth it
 Version 0.14.2 ... 
  ... which comes with absolutely no warranty whatsoever
 (c) 2015-2021 by Claus Fieker, Tommy Hofmann and Carlo Sircana
@@ -371,3 +364,106 @@ nf_elem[-15//31*a + 16//45, -45//83*a + 38, 13//45*a + 7//3, -95//39*a - 47//34,
 
 julia> w^2
 nf_elem[-32//93*a - 2943359//1946025, -383772122//3589335*a + 37085788053574//13406166225, 721333971836//122161719375*a + 33938130884//8144114625, 47255854807909406865792166//287127395568904307625*a - 3032705341779982679482034582662//1755592605640137238255125, 1213858003577266487//95091903978693750*a - 759287183100790280747//3409220853754650000, 305511944952747451043718774194787242278709//474192680826090146218629109453125*a - 5749964944464486837633207058435777487183513461//1180739775256964464084386482538281250, 7806409201082831635477129//41122493875586112187500*a - 3265220599746469324240462397//493469926507033346250000, 2789006839176288370464876388819225384146479495324771646433952//1224071188845178435009607006422512841910384296875*a - 31944824358108210740867255235233556080939157120399384617065755493733//2451013495893044309192324288478928708135639169975625000, 203992719446633012992610635292498804462//308100295199099993704015849365234375*a + 10349781213619300819444928930820682043//6846673226646666526755907763671875, 6653679202855110576295249020004254927459163586710708153640725752442363//1151476586786216014506749985411880602998747715937500000*a - 633072647820205728261076774353263721006538048913965790345217592502211139309477//23729901248964821173934527292364592670420500634500961250000000, -6802378524049568383109101308139466745278//184191350324793074224242567126416015625*a - 110971748540496009339562887905118139328449//258195341744176602712560469651873828125, 2785215083583212028479577025672985838634814110579552408785589030425287348504055574543057279521395281//147584385910140562031378207065212660100744563631729498807549294324491851806640625*a - 22535484532069155853387843322949121659906431526425535434022365474869139348484729008950842455000230509703103//324856846889964999520988454263663498907354903683617703595225204695298484522705078125000, 60229692413611377202701957273081214154047249//1515286292605391850632980941416967773437500*a + 8998197280444521157888313943964800682711659907//24244580681686269610127695062671484375000000, 16097365470982127237931364918187537281188017168224980874431345625968441199597816795962239036263//360068667721191680426116275158034077143805137934755124680319531250000000*a - 121596352268799853217590631885735002714654050774564932473999842961198269768444959031759660372667843//896570982625767284261029525143504852088074793457540260453995632812500000000, -38249906521610790634094229780524587741140955751529607689057602960863//67982186702809718873567374660693209049657118994140625000000000*a + 326898172910831031558959223132026647571972498914077999738242344092971//109677927880533013116022031119251710600113485310546875000000000, 2652186386110661425369870962210273943902004750799140983762650082529771482757114027516258283260632657055289969211490186611345893702893//17401247022001578590988781041570112803260723915923431496030706452830054712273025228848039263779296875000000*a - 179957470708831799431423116180186647863084162961202734941261229629639721800622136771479518290101172750246156385328815460342154954465327448454173//485524096379483962315003674170586517110019851656810006098527011568976176209075278999358785626876314754726562500000000]
+```
+Many of Nemo.jl's implementations of common rings are quite a bit faster than AbstractAlgebra.jl's, largely thanks to the excellent performance of the [Flint](https://www.flintlib.org/) and [Antic](https://github.com/wbhart/antic/) backends. WittVectors.jl uses AbstractAlgebra.jl's power series ring constructors to create the series rings used in the Witt vector addition and multiplication algorithms; these constructors automatically construct the relevant Flint series ring when possible and supplied a Nemo data type. This gives a large improvement in performance; it is recommended to use Nemo data types as your base ring whenever a Flint implementation is possible (see the [Nemo documentation for power series rings](https://nemocas.github.io/Nemo.jl/dev/series/). The following example demonstrates the performance differences between the generic pure Julia types of AbstractAlgebra.jl and the Flint types of Nemo.jl.
+```julia-repl
+julia> using AbstractAlgebra, Nemo, WittVectors
+
+julia> W1=TruncatedBigWittVectorRing(AbstractAlgebra.GF(23),[128])
+Witt vector ring over Finite field F_23 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128]
+
+julia> w1=rand(W1)
+AbstractAlgebra.GFElem{Int64}[4, 8, 17, 12, 9, 21, 7, 12] truncated over [1, 2, 4, 8, 16, 32, 64, 128]
+
+julia> @time w1^2
+  4.241963 seconds (4.43 M allocations: 585.437 MiB, 2.68% gc time, 55.61% compilation time)
+AbstractAlgebra.GFElem{Int64}[16, 16, 18, 1, 6, 8, 15, 15] truncated over [1, 2, 4, 8, 16, 32, 64, 128]
+
+julia> @time w1^2#always throw out the first @time run
+  1.854101 seconds (1.35 M allocations: 415.394 MiB, 3.73% gc time)
+AbstractAlgebra.GFElem{Int64}[16, 16, 18, 1, 6, 8, 15, 15] truncated over [1, 2, 4, 8, 16, 32, 64, 128]
+
+julia> W2=TruncatedBigWittVectorRing(Nemo.GF(23),[128])
+Witt vector ring over Galois field with characteristic 23 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128]
+
+julia> w2=W2([4, 8, 17, 12, 9, 21, 7, 12])
+gfp_elem[4, 8, 17, 12, 9, 21, 7, 12] truncated over [1, 2, 4, 8, 16, 32, 64, 128]
+
+julia> @time w2^2;
+       @time w2^2
+  1.353346 seconds (2.64 M allocations: 195.069 MiB, 3.61% gc time, 89.38% compilation time)
+  0.166940 seconds (290.79 k allocations: 65.720 MiB, 16.72% gc time)
+gfp_elem[16, 16, 18, 1, 6, 8, 15, 15] truncated over [1, 2, 4, 8, 16, 32, 64, 128]
+
+julia> W1=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ,23^2),[64]) #don't have the patience for higher degree example with AA.jl residue ring types
+Witt vector ring over Residue ring of Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64]
+
+julia> w1=rand(W1, 1:23^2)
+AbstractAlgebra.Generic.Res{BigInt}[312, 251, 192, 386, 317, 210, 410] truncated over [1, 2, 4, 8, 16, 32, 64]
+
+julia> @time w1^2;
+       @time w1^2
+  5.631181 seconds (57.02 M allocations: 1.402 GiB, 41.83% gc time, 4.79% compilation time)
+  5.061482 seconds (56.58 M allocations: 1.379 GiB, 40.66% gc time)
+AbstractAlgebra.Generic.Res{BigInt}[8, 413, 449, 213, 406, 405, 105] truncated over [1, 2, 4, 8, 16, 32, 64]
+
+julia> W2=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [64])
+Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64]
+
+julia> w2=W2([312, 251, 192, 386, 317, 210, 410])
+nmod[312, 251, 192, 386, 317, 210, 410] truncated over [1, 2, 4, 8, 16, 32, 64]
+
+julia> @time w2^2;
+       @time w2^2
+  1.262894 seconds (2.40 M allocations: 137.847 MiB, 2.79% gc time, 98.68% compilation time)
+  0.018759 seconds (74.56 k allocations: 10.318 MiB)
+nmod[8, 413, 449, 213, 406, 405, 105] truncated over [1, 2, 4, 8, 16, 32, 64]
+
+julia> W3=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [256]) #Nemo on the other hand can handle much larger degrees
+Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> w3=rand(W3)
+nmod[108, 186, 449, 306, 219, 462, 50, 391, 425] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> @time w3^2;
+       @time w3^2
+  1.107194 seconds (1.15 M allocations: 454.734 MiB, 7.91% gc time)
+  1.066501 seconds (1.15 M allocations: 454.734 MiB, 7.65% gc time)
+nmod[26, 43, 445, 351, 451, 162, 353, 426, 176] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> W4=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ,23^2), [1024]) #MUCH larger.
+Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+
+julia> w4=rand(W4)
+nmod[43, 432, 164, 463, 90, 508, 520, 70, 336, 179, 60] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024] #This is likely basically unreachable for the AA.jl implementation, although I haven't let such a computation run long enough to know for sure it's not in the "hours-to-days" category. 
+
+julia> @time w4^2;
+       @time w4^2
+ 70.405314 seconds (18.62 M allocations: 30.544 GiB, 2.46% gc time)
+ 71.077432 seconds (18.62 M allocations: 30.544 GiB, 2.33% gc time)
+nmod[262, 259, 142, 509, 41, 295, 282, 133, 302, 445, 227] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+
+julia> W5=TruncatedBigWittVectorRing(AbstractAlgebra.ResidueRing(AbstractAlgebra.ZZ, 23^2),[256])
+Witt vector ring over Residue ring of Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> w5=rand(W6,1:23^2)
+AbstractAlgebra.Generic.Res{BigInt}[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> @time w5^2;
+       @time w5^2
+944.823928 seconds (7.45 G allocations: 188.632 GiB, 39.14% gc time)
+984.901435 seconds (7.45 G allocations: 188.632 GiB, 38.36% gc time)
+AbstractAlgebra.Generic.Res{BigInt}[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> W7=TruncatedBigWittVectorRing(Nemo.ResidueRing(Nemo.ZZ, 23^2),[256])
+Witt vector ring over Integers modulo 529 truncated over the set [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> w7=W7([137, 478, 323, 93, 438, 270, 58, 322, 26])
+nmod[137, 478, 323, 93, 438, 270, 58, 322, 26] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+julia> @time w6^2;
+       @time w6^2 #over 60 times faster
+  2.602091 seconds (4.25 M allocations: 628.009 MiB, 5.14% gc time, 58.33% compilation time)
+  1.082737 seconds (1.15 M allocations: 454.736 MiB, 7.32% gc time)
+nmod[254, 454, 117, 350, 346, 61, 92, 289, 255] truncated over [1, 2, 4, 8, 16, 32, 64, 128, 256]
+```
