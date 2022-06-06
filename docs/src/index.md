@@ -4,7 +4,7 @@ These installation instructions assume Git and Julia 1.7.x or later are already 
 
 To add WittVectors to your current project's registry, the following should work:
 ```julia-repl
-julia> using Pkg; Pkg.add https://github.com/demarkd/WittVectors.jl
+julia> using Pkg; Pkg.add(url="https://github.com/demarkd/WittVectors.jl")
 
 julia> using WittVectors
 ```
