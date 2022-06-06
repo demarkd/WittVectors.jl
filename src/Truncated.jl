@@ -414,6 +414,7 @@ function *(w::TruncatedWittVector{T}, c:: Integer) where T <: RingElement
 	return truncate!(r)
 end
 function *(c::Integer, w::TruncatedWittVector{T}) where T <: RingElement
+    return *(w,c)
 end
 
 #############
