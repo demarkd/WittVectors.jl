@@ -245,7 +245,7 @@ end
 Returns true if w is known to be a unit. Known being the operative word here--outside of special cases like W_p(Z/p), I do not really know a good way to know whether a given Witt vector is a unit. This functionality may be expanded in the future (but perhaps do not hold your breath).
 """
 function is_unit(w::WittVector)
-	println("WARNING: checking if a Witt Vector is a unit, but I don't actually know how to implement it--this will return false negatives for units other than [1]")
+	#println("WARNING: checking if a Witt Vector is a unit, but I don't actually know how to implement it--this will return false negatives for units other than [1]")
 	return isone(w)
 end
 """
