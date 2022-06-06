@@ -137,7 +137,7 @@ function isone(w::TruncatedWittVector)
 	return isone(X[1])*isconstant(w)
 end
 function is_unit(w::TruncatedWittVector)
-	println("WARNING: checking if a [truncated] Witt Vector is a unit, but I don't actually know how to implement it--this will return false negatives for units other than [1]")
+	#println("WARNING: checking if a [truncated] Witt Vector is a unit, but I don't actually know how to implement it--this will return false negatives for units other than [1]")
 	return isone(w)
 end
 
