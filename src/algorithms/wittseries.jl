@@ -4,7 +4,7 @@ function seriesrep(w::WittVector)
 	n=w.prec
 	R=W.base_ring
 	S,T = PowerSeriesRing(R,n+1,"T",model=:capped_absolute)
-	return prod(inv(1-X[i]*T^i) for i in eachindex(X))
+@inbounds	return prod(inv(1-X[i]*T^i) for i in eachindex(X))
 end
 function negseries(w::WittVector)
 	X=w.xcoords
@@ -12,7 +12,7 @@ function negseries(w::WittVector)
 	n=w.prec
 	R=W.base_ring
 	S,T= PowerSeriesRing(R,n+1,"T",model=:capped_absolute)
-	return prod(1-X[i]*T^i for i in eachindex(X))
+@inbounds	return prod(1-X[i]*T^i for i in eachindex(X))
 end
 function intseries(c::Integer, W::BigWittRing)
 	R=W.base_ring

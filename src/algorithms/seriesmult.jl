@@ -18,7 +18,7 @@ function multseries(X::Vector{TT},Y::Vector{TT}) where TT <: RingElement
 		R,T = PowerSeriesRing(baseX,prec+1,"T",model=:capped_absolute)
 		#println("R=$R, X of type $(typeof(X)), Y of type $(typeof(Y)). If we have made it this far, the div error is definitely in the next line")#debug
 #		return prod( prod( prod( inv((1-prod(X[r] for xi ∈1:(lcm(r,s)÷r))*prod(Y[s] for yi ∈1:(lcm(r,s)÷s))*prod(R(T) for j ∈ 1:(lcm(r,s))))) for i ∈ 1:(gcd(r,s))) for r∈1:prec) for s ∈ 1:prec)#WOW I HATE IT! for some reason this appears to be necessary at least for the moment since otherwise the REPL throws up a methoderror TODO pretty this up
-return inv(1-(X[1])*(Y[1])*T)*prod(prod(inv((1-(X[r])^(s÷gcd(r,s))*(Y[s])^(r÷gcd(r,s))*T^(lcm(r,s)))*(1-(Y[r])^(s÷gcd(r,s))*(X[s])^(r÷gcd(r,s))*T^(lcm(r,s))))^(gcd(r,s)) for r in 1:s-1)*inv(1-(X[s])*(Y[s])*T^s)^s for s in 2:prec)
+		@inbounds return inv(1-(X[1])*(Y[1])*T)*prod(prod(inv((1-(X[r])^(s÷gcd(r,s))*(Y[s])^(r÷gcd(r,s))*T^(lcm(r,s)))*(1-(Y[r])^(s÷gcd(r,s))*(X[s])^(r÷gcd(r,s))*T^(lcm(r,s))))^(gcd(r,s)) for r in 1:s-1)*inv(1-(X[s])*(Y[s])*T^s)^s for s in 2:prec)
 	end
 end
 #=
@@ -45,7 +45,7 @@ function multseries(X::Vector{TT},Y::Vector{TT}, S::Vector{Bool}) where TT <: Ri
 	else
 		R,T = PowerSeriesRing(baseX,prec+1,"T",model=:capped_absolute)
 		#println("R=$R, X of type $(typeof(X)), Y of type $(typeof(Y)). If we have made it this far, the div error is definitely in the next line")#debug
-		return inv(1-(X[1])*(Y[1])*T)*prod(prod(inv((1-(X[r])^(s÷gcd(r,s))*(Y[s])^(r÷gcd(r,s))*T^(lcm(r,s)))*(1-(Y[r])^(s÷gcd(r,s))*(X[s])^(r÷gcd(r,s))*T^(lcm(r,s))))^(gcd(r,s)) for r in 1:s-1 if S[r])*inv(1-(X[s])*(Y[s])*T^s)^s for s in 2:prec if S[s])
+		@inbounds return inv(1-(X[1])*(Y[1])*T)*prod(prod(inv((1-(X[r])^(s÷gcd(r,s))*(Y[s])^(r÷gcd(r,s))*T^(lcm(r,s)))*(1-(Y[r])^(s÷gcd(r,s))*(X[s])^(r÷gcd(r,s))*T^(lcm(r,s))))^(gcd(r,s)) for r in 1:s-1 if S[r])*inv(1-(X[s])*(Y[s])*T^s)^s for s in 2:prec if S[s])
 		
 #		return prod( prod( prod( inv((1-prod(X[r] for xi ∈1:(lcm(r,s)÷r))*prod(Y[s] for yi ∈1:(lcm(r,s)÷s))*prod(R(T) for j ∈ 1:(lcm(r,s))))) for i ∈ 1:(gcd(r,s))) for r∈1:prec if S[r]) for s ∈ 1:prec if S[s])#WOW I HATE IT! for some reason this appears to be necessary at least for the moment since otherwise the REPL throws up a methoderror TODO pretty this up
 	end
