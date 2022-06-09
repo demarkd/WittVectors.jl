@@ -1,17 +1,6 @@
 using AbstractAlgebra
-function nextcoeff(f::SeriesElem{TT},Y::Vector{TT}, curseries::SeriesElem{TT}) where TT <: RingElement #issues: as it stands, this is not a pure function because it uses append!
-	#= if (length(Y)==0) 
-		return [coeff(f,1)]#this is an ad-hoc solution to avoiding a type-stability issue--this case would not be necessary except that if nextcoeff is called with Y==[], the return is of type Vector{any}; this automatically sets the return to Vector{RingElem{base_ring(Parent(f))}}  
-	elseif (length(Y)==precision(f)-1)
-		println("nextcoeff called with as many coordinates found as allowable by precision of its argument")
-		return Y
-	elseif (length(Y)>precision(f)-1)
-		return error("nextcoeff called with more coordinates claimed found than possible")
-	else
-	=#
-		#println("test")
+function nextcoeff(f::SeriesElem{TT},Y::Vector{TT}, curseries::SeriesElem{TT}) where TT <: RingElement
 		R=parent(f)
-		#yseries=(length(Y)==0) ? one(R) : prod(  inv(1-Y[i]*gen(R)^i) for i ∈ eachindex(Y))
 		#println("curseries=$(curseries)");println("f=$f");println("f reduced = $(f-curseries)")#debug
 		n=length(Y)+1
 		yn=coeff(f-curseries,n)

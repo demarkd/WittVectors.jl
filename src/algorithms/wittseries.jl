@@ -1,4 +1,4 @@
-function seriesrep(w::WittVector)
+function seriesrep(w::WittVector{TT})::AbsSeriesElem{TT} where TT<: RingElement
 	X=w.xcoords
 	W=w.parent
 	n=w.prec

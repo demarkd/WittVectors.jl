@@ -286,7 +286,7 @@ end
 
 function truncate!(w::TruncatedWittVector)
 	R=base_ring(w.parent)
-	S=broadcast(R,(w.parent).truncationset)
+	S=broadcast(R,((w.parent).truncationset))
 	X=deepcopy(w.xcoords)
 	w.xcoords= X .* S
 	return w
