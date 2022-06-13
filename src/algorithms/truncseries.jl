@@ -1,4 +1,4 @@
-function seriesrep(w::TruncatedWittVector)
+function seriesrep(w::TruncatedWittVector{TT}) where TT<: RingElement
 	X=w.xcoords
 	W=(w.parent).untruncated
 	n=W.prec

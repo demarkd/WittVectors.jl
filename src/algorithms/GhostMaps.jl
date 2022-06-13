@@ -33,19 +33,33 @@ function divisors(n)
         return dlist #reshape(dlist,1,size(dlist)[1])
 end
 
-function ghostpoly(x::Vector,n=length(x))
+function ghostpoly(x::Vector{T},n=length(x)) where T <: RingElement
 	#this may or may not be directly useful to the implementation but if not should definitely be so for testing
-	if n<0 return "error" end
-	if n==0 return x[1] end
+	if n<=0 return "error" end
+	#if n==0 return x[1] end
 	divs=divisors(n)
 	return sum(d*(x[d]^(n÷d)) for d in divs)
 end
+function pTypicalghostpoly(X::Vector{T}, p::Integer, n::Integer) where T <: RingElement
+	l=length(X)
+	if n+1 > l return error("too high!") end
+	return sum(p^(i-1)*X[i]^(p^(n-i+1)) for i in 1:(n+1))
+end
 
-function ghostmap(w::WittVector, n)
+	
+function partial_ghost(X::Vector{T},n::Int) where T <: RingElement
+	l=length(X)
+	if n>l return error("too high!") end
+	return sum(p^(i-1)*X[i]^(p^(n-i+1)) for i in 1:n)
+end
+function ghostmap(w::WittVector{T}, n) where T <: RingElement
 	return ghostpoly(w.xcoords, n)
 end
-function ghostmap(w::TruncatedWittVector, n)
+function ghostmap(w::TruncatedWittVector{T}, n) where T <: RingElement
 	return ghostpoly(w.xcoords, n)
+end
+function ghostmap(X::Vector{T},n) where T <: RingElement
+	return ghostpoly(X,n)
 end
 
 	#dic= Dict([]) #not sure why we would need this...
