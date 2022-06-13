@@ -9,7 +9,7 @@ function nextcoeff(f::SeriesElem{TT},Y::Vector{TT}) where TT <: RingElement
 		newseries=f*(1-yn*T^n)
 		#println("newseries=$newseries")
 		#println("Y of type $(typeof(Y)), yn of type $(typeof(yn))")#debug
-		return (newseries, vcat(vec(Y),vec([yn])))
+		return (newseries,push!(Y,yn))
 end
 function coordgen(curseries::SeriesElem{TT}, Y::Vector{TT}, m::Int) where TT <: RingElement#iterator function for nextcoeff
 	if (length(Y)>m) return error("coordgen called with more coordinates given than asked for")
