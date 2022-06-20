@@ -27,7 +27,7 @@ return coordgen(f,(elem_type(base_ring(parent(f))))[],precision(f)-1)
 #	end
 end
 =#
-function getcoords(f::SeriesElem{TT}) where TT <: RingElement
+function getcoords(f::SeriesElem{TT})::Vector{TT} where TT <: RingElement
 	R=parent(f)
 	T=gen(R)
 	m=precision(f)-1
