@@ -1,7 +1,7 @@
 using Test
 include(joinpath(pathof(AbstractAlgebra), "..", "..", "test", "Rings-conformance-tests.jl"))
 
-S1 =QQ 
+S1 =ZZ 
 S2=GF(7)
 function test_elem(W::BigWittRing{elem_type(S1)})
    return rand(W,  -999:999)
@@ -13,5 +13,5 @@ test_Ring_interface(BigWittVectorRing(S1,8))
 test_Ring_interface(BigWittVectorRing(S2,8))
 test_Ring_interface(BigWittVectorRing(S1,8,method=:ghost))
 #test_Ring_interface(BigWittVectorRing(S1,8))
-test_Ring_interface(BigWittVectorRing(S2,8,method=:series))
+test_Ring_interface(BigWittVectorRing(S1,8,method=:series))
 test_Ring_interface(BigWittVectorRing(S2,8,method=:series))
