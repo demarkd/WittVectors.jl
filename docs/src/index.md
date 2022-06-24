@@ -21,25 +21,25 @@ Following the conventions and type structure of AbstractAlgebra.jl, WittVectors.
 julia> using WittVectors, AbstractAlgebra;
 
 julia> W1= BigWittVectorRing(GF(7), 25)
-Big Witt vector ring represented up to degree 25 over Finite field F_7
+Big Witt vector ring represented up to degree 25 over Finite field F_7, with computations performed using hybrid methods
 
 julia> typeof(W1)
 BigWittRing{AbstractAlgebra.GFElem{Int64}}
 
 julia> W2=TruncatedBigWittVectorRing(ZZ, [18, 25]) #Most convenient way to call this is with a list of generators for the truncation set
-Witt vector ring over Integers truncated over the set [1, 2, 3, 5, 6, 9, 18, 25]
+Witt vector ring over Integers truncated over the set [1, 2, 3, 5, 6, 9, 18, 25], with computations performed using hybrid methods
 
 julia> typeof(W2)
 TruncatedBigWittRing{BigInt}
 
 julia> W3=pTypicalWittVectorRing(QQ, 3, 4)
-Witt vector ring over Rationals truncated over the set [1, 3, 9, 27, 81]
+Witt vector ring over Rationals truncated over the set [1, 3, 9, 27, 81], with computations performed using hybrid methods
 
 julia> typeof(W3)
 TruncatedBigWittRing{Rational{BigInt}}
 
 julia> W4=TruncatedBigWittVectorRing(QQ, [3^4])
-Witt vector ring over Rationals truncated over the set [1, 3, 9, 27, 81]
+Witt vector ring over Rationals truncated over the set [1, 3, 9, 27, 81], with computations performed using hybrid methods
 
 julia> W3==W4 #by default, calling a constructor twice for the same ring returns the same object-- even differing constructors for the same ring
 true
@@ -63,7 +63,7 @@ There are a few ways to create Witt vectors. For elements ``[c]`` of the set-the
 julia> using WittVectors, AbstractAlgebra;
 
 julia> W= BigWittVectorRing(GF(7), 10)
-Big Witt vector ring represented up to degree 10 over Finite field F_7
+Big Witt vector ring represented up to degree 10 over Finite field F_7, with computations performed using hybrid methods
 
 julia> a=W(6)
 AbstractAlgebra.GFElem{Int64}[6, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -109,10 +109,10 @@ We can quotient `WittVector`s to `TruncatedWittVector`s and `BigWittRing`s to `T
 julia> using AbstractAlgebra, WittVectors;
 
 julia> W= BigWittVectorRing(GF(5), 12)
-Big Witt vector ring represented up to degree 12 over Finite field F_5
+Big Witt vector ring represented up to degree 12 over Finite field F_5, with computations performed using hybrid methods
 
 julia> W_S=TruncatedBigWittVectorRing(GF(5), [10])
-Witt vector ring over Finite field F_5 truncated over the set [1, 2, 5, 10]
+Witt vector ring over Finite field F_5 truncated over the set [1, 2, 5, 10], with computations performed using hybrid methods
 
 julia> w=W(1)*17
 AbstractAlgebra.GFElem{Int64}[2, 4, 3, 1, 2, 3, 2, 0, 1, 0, 4, 4]
@@ -134,7 +134,7 @@ julia> S=W_S.truncationset
  1
 
 julia> truncate(W,S)
-Witt vector ring over Finite field F_5 truncated over the set [1, 2, 5, 10]
+Witt vector ring over Finite field F_5 truncated over the set [1, 2, 5, 10], with computations performed using hybrid methods
 
 julia> truncate(w,S)
 AbstractAlgebra.GFElem{Int64}[2, 4, 2, 0] truncated over [1, 2, 5, 10]

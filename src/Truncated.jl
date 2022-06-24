@@ -17,7 +17,7 @@ Return a Witt vector with coordinates specified by `A`. `A` can be the length of
 julia> using AbstractAlgebra, WittVectors;
 
 julia> W=pTypicalWittVectorRing(GF(3),2,3)
-Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8]
+Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8], with computations performed using hybrid methods
 
 julia> w=W([2,1,0,2])
 AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
@@ -43,16 +43,16 @@ julia> w1.xcoords #note the bogus entries are killed
 mutable struct TruncatedBigWittRing{T <: RingElement} <: Ring
 	untruncated::BigWittRing{T}
 	truncationset::Vector{Bool}
-
-	function TruncatedBigWittRing{T}(W::BigWittRing, truncationset::Vector{Bool}, cached::Bool) where T<: RingElement
+	method::Symbol
+	function TruncatedBigWittRing{T}(W::BigWittRing, truncationset::Vector{Bool}, cached::Bool, method::Symbol) where T<: RingElement
 		if length(truncationset)>W.prec return error("too large a truncation set!") end
-		return get_cached!(TruncatedWittID, (W, truncationset), cached) do
-			new{T}(W,truncationset)
+		return get_cached!(TruncatedWittID, (W, truncationset,method), cached) do
+			new{T}(W,truncationset,method)
 		end::TruncatedBigWittRing{T}
 	end
 end
 
-const TruncatedWittID=AbstractAlgebra.CacheDictType{Tuple{BigWittRing,Vector{Bool}},Ring}()
+const TruncatedWittID=AbstractAlgebra.CacheDictType{Tuple{BigWittRing,Vector{Bool},Symbol},Ring}()
 """
 	mutable struct TruncatedWittVector{T <: RingElement} <: RingElem
 Child type for truncated Witt vectors. Contains three fields, `xcoords::Vector{T}` which are its coordinates (INCLUDING indices not in the truncation set), `truncationset::Vector{Bool}` and `parent::TruncatedBigWittRing{T}`. `truncationset` and `parent.truncationset` should match.
@@ -338,9 +338,16 @@ end
 ############
 
 function show(io::IO,W::TruncatedBigWittRing)
+	if W.method ==:series
+		methodstring= "power series"
+	elseif W.method==:ghost
+		methodstring="ghost map recursion"
+	else
+		methodstring="hybrid"
+	end
 	print(io, "Witt vector ring over ")
 	show(io, base_ring(W))
-	print(io, " truncated over the set $(truncationlist(W.truncationset))")
+	print(io, " truncated over the set $(truncationlist(W.truncationset)), with computations performed using $methodstring methods")
 	((W.untruncated).prec != largestmember(truncationlist(W.truncationset))) && print(io, ". Warning: underlying precision of $(W.untruncated.prec) greater than largest member $(largestmember(truncationlist(W.truncationset))) of truncation set")
 end
 function show(io::IO, w::TruncatedWittVector)
@@ -366,7 +373,25 @@ end
 #Unary Operations#
 ##################
 include("algorithms/truncseries.jl")
-function -(w::TruncatedWittVector)
+function -(w::TruncatedWittVector{TT}) where TT <: RingElement
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_neg(w)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_neg(w)
+	else
+		try
+			#println("using tryghost")
+			return ghost_neg(w)
+		catch e
+			#println("using tryseries")
+			return series_neg(w)
+		end
+	end
+end
+function series_neg(w::TruncatedWittVector{TT}) where TT <: RingElement
 	negw=deepcopy(w)
 	negw.xcoords=getcoords(negseries(w))
 	return truncate!(negw)
@@ -378,6 +403,24 @@ end
 
 function +(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
 	parent(w) != parent(v) && error("Incompatible Rings--possibly because of different native precision for underlying Witt rings")
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_add(w,v)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_add(w,v)
+	else
+		try
+			#println("using tryghost")
+			return ghost_add(w,v)
+		catch e
+			#println("using tryseries")
+			return series_add(w,v)
+		end
+	end
+end
+function series_add(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
 	addnseries=seriesrep(w)*seriesrep(v)
 	sumvec=deepcopy(w)
 	sumvec.xcoords=getcoords(addnseries)
@@ -385,7 +428,25 @@ function +(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: Ring
 end
 
 function *(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
-	parent(w) != parent(v) && error("Incompatible Rings--possibly because of differing native precision for underlying Witt rings")
+	parent(w) != parent(v) && error("Incompatible Rings--possibly because of different native precision for underlying Witt rings")
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_mul(w,v)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_mul(w,v)
+	else
+		try
+			#println("using tryghost")
+			return ghost_mul(w,v)
+		catch e
+			#println("using tryseries")
+			return series_mul(w,v)
+		end
+	end
+end
+function series_mul(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
 	S=parent(w).truncationset
 	multnseries = multseries(w.xcoords, v.xcoords, S)
 	prodvec=deepcopy(w)
@@ -393,7 +454,25 @@ function *(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: Ring
 	return truncate!(prodvec)
 end
 function -(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
-	parent(w) != parent(v) && error("Incompatible Rings--possibly because of differing native precision for underlying Witt rings")
+	parent(w) != parent(v) && error("Incompatible Rings--possibly because of different native precision for underlying Witt rings")
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_sub(w,v)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_sub(w,v)
+	else
+		try
+			#println("using tryghost")
+			return ghost_sub(w,v)
+		catch e
+			#println("using tryseries")
+			return series_sub(w,v)
+		end
+	end
+end
+function series_sub(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
 	subnseries=divexact(seriesrep(w),seriesrep(v))
 	r=deepcopy(w)
 	r.xcoords=getcoords(subnseries)
@@ -405,6 +484,25 @@ end
 #####################
 
 function *(w::TruncatedWittVector{T}, c:: Integer) where T <: RingElement
+	#parent(w) != parent(v) && error("Incompatible Rings--possibly because of different native precision for underlying Witt rings")
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_int_mul(w,c)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_int_mul(w,c)
+	else
+		try
+			#println("using tryghost")
+			return ghost_int_mul(w,c)
+		catch e
+			#println("using tryseries")
+			return series_int_mul(w,c)
+		end
+	end
+end
+function series_int_mul(w::TruncatedWittVector{T}, c:: Integer) where T <: RingElement
 	r=deepcopy(w)
 	if c>= 0
 		r.xcoords=getcoords(seriesrep(w)^c)
@@ -472,12 +570,50 @@ function zero!(w::TruncatedWittVector)
 	return w
 end
 function mul!(u::TruncatedWittVector{T}, w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
+	parent(w) != parent(v) && error("Incompatible Rings--possibly because of different native precision for underlying Witt rings")
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_mul!(u,w,v)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_mul!(u,w,v)
+	else
+		try
+			#println("using tryghost")
+			return ghost_mul!(u,w,v)
+		catch e
+			#println("using tryseries")
+			return series_mul!(u,w,v)
+		end
+	end
+end
+function series_mul!(u::TruncatedWittVector{T}, w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
 	#parent(w) != parent(v) && error("Incompatible Rings")
 	#parent(u) != parent(w) && error("Incompatible Rings")
 	u.xcoords=getcoords(multseries(w.xcoords,v.xcoords))
 	return truncate!(u)
 end
 function add!(u:: TruncatedWittVector{T}, w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T<: RingElement
+	parent(w) != parent(v) && error("Incompatible Rings--possibly because of different native precision for underlying Witt rings")
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_add!(u,w,v)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_add!(u,w,v)
+	else
+		try
+			#println("using tryghost")
+			return ghost_add!(u,w,v)
+		catch e
+			#println("using tryseries")
+			return series_add!(u,w,v)
+		end
+	end
+end
+function series_add!(u:: TruncatedWittVector{T}, w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T<: RingElement
 	#parent(w) != parent(v) && error("Incompatible Rings")
 	#parent(u) != parent(w) && error("Incompatible Rings")
 	u.xcoords=getcoords(seriesrep(w)*seriesrep(v))
@@ -485,6 +621,25 @@ function add!(u:: TruncatedWittVector{T}, w::TruncatedWittVector{T}, v::Truncate
 end
 
 function addeq!(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
+	parent(w) != parent(v) && error("Incompatible Rings--possibly because of different native precision for underlying Witt rings")
+	W=parent(w)
+	if W.method == :series
+		#println("using series")
+		return series_addeq!(w,v)
+	elseif W.method==:ghost
+		#println("using ghost")
+		return ghost_addeq!(w,v)
+	else
+		try
+			#println("using tryghost")
+			return ghost_addeq!(w,v)
+		catch e
+			#println("using tryseries")
+			return series_addeq!(w,v)
+		end
+	end
+end
+function series_addeq!(w::TruncatedWittVector{T}, v::TruncatedWittVector{T}) where T <: RingElement
 	w.xcoords=getcoords(seriesrep(w)*seriesrep(v))
 	return truncate!(w)
 end
@@ -642,15 +797,15 @@ Same as above except now taking an integer-vector argument.
     function TruncatedBigWittVectorRing(W::BigWittRing, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true)
 Return `TruncatedBigWittVectorRing(W.base_ring, S, cached, stabilize)`.
 """
-function TruncatedBigWittVectorRing(R::Ring, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true)
+function TruncatedBigWittVectorRing(R::Ring, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true;method::Symbol=:tryghost)
 	T=elem_type(R)
 	n=length(S)
 	stabilize ? S_stable=divisor_stabilize(S) : S_stable=S
-	W=BigWittRing{T}(R,n,cached)
-	return TruncatedBigWittRing{T}(W,S_stable,cached)
+	W=BigWittRing{T}(R,n,cached,method)
+	return TruncatedBigWittRing{T}(W,S_stable,cached,method)
 end
-function TruncatedBigWittVectorRing(R::Ring, Ns::Vector{Int}, cached::Bool=true, stabilize::Bool=true)
-	return TruncatedBigWittVectorRing(R,truncationbools(Ns), cached, stabilize)
+function TruncatedBigWittVectorRing(R::Ring, Ns::Vector{Int}, cached::Bool=true, stabilize::Bool=true; method::Symbol=:tryghost)
+	return TruncatedBigWittVectorRing(R,truncationbools(Ns), cached, stabilize, method=method)
 end
 """
     function pTypicalWittVectorRing(R::Ring, p::Integer, m::Integer,cached::Bool=true)
@@ -661,7 +816,7 @@ Specialized version of the `TruncatedBigWittVectorRing` to create ``W_{p^m}(R)``
 julia> using AbstractAlgebra, WittVectors;
 
 julia> W=pTypicalWittVectorRing(GF(3),2,3)
-Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8]
+Witt vector ring over Finite field F_3 truncated over the set [1, 2, 4, 8], with computations performed using hybrid methods
 
 julia> w=W([2,1,0,2])
 AbstractAlgebra.GFElem{Int64}[2, 1, 0, 2] truncated over [1, 2, 4, 8]
@@ -686,15 +841,15 @@ julia> w1.xcoords
     pTypicalWittVectorRing(W::BigWittRing, p::Integer, m::Integer, cached::Bool=true)
 Return `pTypicalWittVectorRing(base_ring(W), p, m, cached)` 
 """
-function pTypicalWittVectorRing(R::Ring, p::Integer, m::Integer,cached::Bool=true)
+function pTypicalWittVectorRing(R::Ring, p::Integer, m::Integer,cached::Bool=true; method::Symbol=:tryghost)
 	 ~isprime(p) && error("nonprime p") 
 	 Sl=[p^(k-1) for k in 1:(m+1)]
-	 return TruncatedBigWittVectorRing(R,Sl,cached, false)
+	 return TruncatedBigWittVectorRing(R,Sl,cached, false, method=method)
 end
-function TruncatedBigWittVectorRing(W::BigWittRing, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true)
-	return TruncatedBigWittVectorRing(base_ring(W), S, cached, stabilize)
+function TruncatedBigWittVectorRing(W::BigWittRing, S::Vector{Bool}, cached::Bool=true, stabilize::Bool=true; method::Symbol=:tryghost)
+	return TruncatedBigWittVectorRing(base_ring(W), S, cached, stabilize,method=method)
 end
-pTypicalWittVectorRing(W::BigWittRing, p::Integer, m::Integer, cached::Bool=true)=pTypicalWittVectorRing(base_ring(W), p, m, cached)
+pTypicalWittVectorRing(W::BigWittRing, p::Integer, m::Integer, cached::Bool=true;method::Symbol=:tryghost)=pTypicalWittVectorRing(base_ring(W), p, m, cached,method=method)
 #############################
 #Truncating Big Witt vectors#
 #############################

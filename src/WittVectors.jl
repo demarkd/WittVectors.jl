@@ -25,7 +25,7 @@ julia> using AbstractAlgebra;
 julia> using WittVectors;
 
 julia> W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
+Big Witt vector ring represented up to degree 10 over Integers, with computations performed using hybrid methods
 
 julia> w=W()
 BigInt[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -42,7 +42,7 @@ Since there is no additive ring homomorphism R→W(R), calling `W(c)` for `c` an
 julia> using WittVectors, AbstractAlgebra;
 
 julia> W1=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
+Big Witt vector ring represented up to degree 10 over Integers, with computations performed using hybrid methods
 
 julia> W1(256)
 BigInt[256, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -54,13 +54,13 @@ julia> W1(2)
 BigInt[2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 julia> W2=BigWittVectorRing(GF(7),10)
-Big Witt vector ring represented up to degree 10 over Finite field F_7
+Big Witt vector ring represented up to degree 10 over Finite field F_7, with computations performed using hybrid methods
 
 julia> W2(256)
 AbstractAlgebra.GFElem{Int64}[4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 julia> W3=BigWittVectorRing(AbsSeriesRing(GF(23),10),10)
-Big Witt vector ring represented up to degree 10 over Univariate power series ring in x over Finite field F_23
+Big Witt vector ring represented up to degree 10 over Univariate power series ring in x over Finite field F_23, with computations performed using hybrid methods
 
 julia> W3(256)
 AbstractAlgebra.Generic.AbsSeries{AbstractAlgebra.GFElem{Int64}}[3 + O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10), O(x^10)]
@@ -102,7 +102,7 @@ julia> w=W(X)
 BigInt[1, 2, 3, 4, 5, 6, 7, 8]
 
 julia> parent(w)
-Big Witt vector ring represented up to degree 8 over Integers
+Big Witt vector ring represented up to degree 8 over Integers, with computations performed using hybrid methods
 
 julia> W(Y)
 Warning: not enough coordinates given, filling in with zeros
@@ -116,15 +116,15 @@ BigInt[1, 2, 3, 4, 5, 6, 7, 8]
 mutable struct BigWittRing{T <: RingElement} <: Ring
 	base_ring::Ring
 	prec::Int
-
-	function BigWittRing{T}(R::Ring, max_prec::Int, cached::Bool) where T<: RingElement
-		return get_cached!(WittVectorID, (R, max_prec), cached) do
-			new{T}(R,max_prec)
+	method::Symbol
+	function BigWittRing{T}(R::Ring, max_prec::Int, cached::Bool, method::Symbol) where T<: RingElement
+		return get_cached!(WittVectorID, (R, max_prec,method), cached) do
+			new{T}(R,max_prec,method)
 		end::BigWittRing{T}
 	end
 end
 
-const WittVectorID=AbstractAlgebra.CacheDictType{Tuple{Ring,Int},Ring}()
+const WittVectorID=AbstractAlgebra.CacheDictType{Tuple{Ring,Int,Symbol},Ring}()
 """
 	mutable struct WittVector{T <: RingElement} <: RingElem
 Object type for Big Witt Vectors, i.e. child objcets of `BigWittRing{T}`s. DO NOT CONSTRUCT USING `WittVectors.WittVector{T}(coords, prec)`, this will produce an orphan Witt Vector which you would then have to assign a parent to directly. Parent-child compatibility is geneerally unchecked, so no lifeguard on duty. Rather, construct the constructors at [`BigWittRing`](@ref). 
@@ -294,7 +294,7 @@ julia> using AbstractAlgebra, WittVectors;
 
 
 julia> W=BigWittVectorRing(ZZ, 10)
-Big Witt vector ring represented up to degree 10 over Integers
+Big Witt vector ring represented up to degree 10 over Integers, with computations performed using hybrid methods
 
 
 julia> w=W([10,9,8,7,6,5,4,3,2,1]);
@@ -336,8 +336,16 @@ canonical_unit(w::WittVector)=one(w.parent)#improving this could potentially hel
 ############
 
 function show(io::IO,W::BigWittRing)
+	if W.method==:series
+		methodstring="power series"
+	elseif W.method==:ghost
+		methodstring="ghost map recursion"
+	else
+		methodstring="hybrid"
+	end
 	print(io, "Big Witt vector ring represented up to degree $(W.prec) over ")
 	show(io, base_ring(W))
+	print(io, ", with computations performed using $methodstring methods")
 end
 
 function show(io::IO, w::WittVector)
@@ -359,8 +367,20 @@ end
 ##################
 #One idea that may improve performance and may fix some type-stability problems that may arise is to associate the power series ring used for addition and multiplication to the witt ring itself--possibly as an optional field (need to look in to how possible that is/if I can parametrize the default choice by the necessary fields) or possibly by some global dictionary strategy.
 #
-
 function -(w::WittVector)
+	W=parent(w)
+	method=W.method
+	if method==:series return series_neg(w)
+	elseif method==:ghost return ghost_neg(w)
+	else 
+		try
+			return ghost_neg(w)
+		catch e
+			return series_neg(w)
+		end
+	end
+end
+function series_neg(w::WittVector)
 	negw=deepcopy(w)
 	negw.xcoords=getcoords(negseries(w))
 	return negw
@@ -369,9 +389,22 @@ end
 ###################
 #Binary Operations#
 ###################
-
+include("algorithms/Ghostbusters.jl")
 function +(w::WittVector{T}, v::WittVector{T}) where T<: RingElement
 	parent(w) != parent(v) &&error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series return series_add(w,v)
+	elseif method==:ghost return ghost_add(w,v)
+	else 
+		try
+			return ghost_add(w,v)
+		catch e
+			return series_add(w,v)
+		end
+	end
+end
+function series_add(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
 	addnseries=seriesrep(w)*seriesrep(v)
 	sumvec=deepcopy(w)
 	sumvec.xcoords=getcoords(addnseries)
@@ -380,6 +413,19 @@ end
 include("algorithms/seriesmult.jl")
 function *(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
 	parent(w) != parent(v) && error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series return series_mul(w,v)
+	elseif method==:ghost return ghost_mul(w,v)
+	else 
+		try
+			return ghost_mul(w,v)
+		catch e
+			return series_mul(w,v)
+		end
+	end
+end
+function series_mul(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
 	multnseries= multseries(w.xcoords,v.xcoords)
 	prodvec=deepcopy(w)
 	prodvec.xcoords=getcoords(multnseries)
@@ -387,12 +433,64 @@ function *(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
 end
 function -(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
 	parent(w) != parent(v) && error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series 
+		##println("using series")
+		return series_sub(w,v)
+	elseif method==:ghost 
+		##println("using ghost")
+		return ghost_sub(w,v)
+	else 
+		try
+		#	#println("using tryghost")
+			return ghost_sub(w,v)
+		catch e
+		#	#println("using tryseries")
+			return series_sub(w,v)
+		end
+	end
+end
+function series_sub(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
+	parent(w) != parent(v) && error("Incompatible Rings")
 	subnseries=divexact(seriesrep(w),seriesrep(v))
 	r=deepcopy(w)
 	r.xcoords=getcoords(subnseries)
 	return r
 end
-
+function ^(w::WittVector{T},n::Integer)::WittVector{T} where T <: RingElement
+	#parent(w) != parent(v) && error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series 
+		#println("using series")
+		return series_pow(w,n)
+	elseif method==:ghost 
+		#println("using ghost")
+		return ghost_pow(w,n)
+	else 
+		try
+			#println("using tryghost")
+			return ghost_pow(w,n)
+		catch e
+			#println("using tryseries")
+			return series_pow(w,n)
+		end
+	end
+end
+function series_pow(w::WittVector{T},n::Integer)::WittVector{T} where T <: RingElement
+	W=w.parent
+	if n==0 return W(1)
+	elseif n>0
+		r=W(1)
+		for i in 1:n
+			r*=w
+		end
+		return r
+	elseif n<0
+		return series_pow(inv(w),-n)
+	end
+end
 #####################
 #Z-Algebra structure#
 #####################
@@ -408,7 +506,7 @@ julia> using AbstractAlgebra;
 julia> using WittVectors;
 
 julia> W=BigWittVectorRing(ZZ,10)
-Big Witt vector ring represented up to degree 10 over Integers
+Big Witt vector ring represented up to degree 10 over Integers, with computations performed using hybrid methods
 
 julia> w=one(W)
 BigInt[1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -438,7 +536,27 @@ julia> t + w + w == 0
 true
 ```
 """
-function *(w::WittVector{T}, c::Integer) where T <: RingElement
+function *(w::WittVector{T}, n::Integer) where T <: RingElement
+	#parent(w) != parent(v) && error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series 
+		#println("using series")
+		return series_int_mul(w,n)
+	elseif method==:ghost 
+		#println("using ghost")
+		return ghost_int_mul(w,n)
+	else 
+		try
+			#println("using tryghost")
+			return ghost_int_mul(w,n)
+		catch e
+			#println("using tryseries")
+			return series_int_mul(w,n)
+		end
+	end
+end
+function series_int_mul(w::WittVector{T}, c::Integer) where T <: RingElement
 	r=deepcopy(w)
 	if c>= 0 
 		r.xcoords=getcoords(seriesrep(w)^c)
@@ -505,12 +623,41 @@ function zero!(w::WittVector)
 	return w
 end
 function mul!(u::WittVector{T}, w::WittVector{T}, v::WittVector{T}) where T <: RingElement
+	parent(w) != parent(v) && error("Incompatible Rings")
+	parent(u) != parent(w) && error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series return series_mul!(u,w,v)
+	elseif method==:ghost return ghost_mul!(u,w,v)
+	else 
+		try
+			return ghost_mul!(u,w,v)
+		catch e
+			return series_mul!(u,w,v)
+		end
+	end
+end
+function series_mul!(u::WittVector{T}, w::WittVector{T}, v::WittVector{T}) where T <: RingElement
 	#parent(w) != parent(v) && error("Incompatible Rings")
-	#parent(u) != parent(w) && error("Incompatible Rings")
 	u.xcoords=getcoords(multseries(w.xcoords,v.xcoords))
 	return u
 end
-function add!(u:: WittVector{T}, w::WittVector{T}, v::WittVector{T}) where T<: RingElement
+function add!(u::WittVector{T}, w::WittVector{T}, v::WittVector{T}) where T <: RingElement
+	parent(w) != parent(v) && error("Incompatible Rings")
+	parent(u) != parent(w) && error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series return series_add!(u,w,v)
+	elseif method==:ghost return ghost_add!(u,w,v)
+	else 
+		try
+			return ghost_add!(u,w,v)
+		catch e
+			return series_add!(u,w,v)
+		end
+	end
+end
+function series_add!(u:: WittVector{T}, w::WittVector{T}, v::WittVector{T}) where T<: RingElement
 	#parent(w) != parent(v) && error("Incompatible Rings")
 	#parent(u) != parent(w) && error("Incompatible Rings")
 	u.xcoords=getcoords(seriesrep(w)*seriesrep(v))
@@ -518,6 +665,20 @@ function add!(u:: WittVector{T}, w::WittVector{T}, v::WittVector{T}) where T<: R
 end
 
 function addeq!(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
+	parent(v) != parent(w) && error("Incompatible Rings")
+	W=parent(w)
+	method=W.method
+	if method==:series return series_addeq!(w,v)
+	elseif method==:ghost return ghost_addeq!(w,v)
+	else 
+		try
+			return ghost_addeq!(w,v)
+		catch e
+			return series_addeq!(w,v)
+		end
+	end
+end
+function series_addeq!(w::WittVector{T}, v::WittVector{T}) where T <: RingElement
 	w.xcoords=getcoords(seriesrep(w)*seriesrep(v))
 	return w
 end
@@ -654,9 +815,9 @@ end
 Main constructor for creating rings of Witt vectors. Returns parent object for the ring of Witt vectors over the base ring `R` up to degree `n`. The optional `cached` argument determines whether to cache the returned object, so that calling the same constructor with the same arguments `R,n` twice returns the same object and hence child objects will be compatible--no life guard on duty if you call `BigWittVectorRing` with `cached==false`.
 
 """
-function BigWittVectorRing(R::Ring, n::Integer, cached::Bool=true)
+function BigWittVectorRing(R::Ring, n::Integer, cached::Bool=true; method::Symbol=:tryghost)
 	T=elem_type(R)
-	return BigWittRing{T}(R,n,cached)
+	return BigWittRing{T}(R,n,cached,method)
 end
 end
 
