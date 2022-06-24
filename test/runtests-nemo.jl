@@ -1,6 +1,6 @@
-using AbstractAlgebra
+import AbstractAlgebra
 using WittVectors
-#using Nemo
+using Nemo
 include("witttest1.jl")
 include("witttest2.jl")
 include("trunctest1.jl")
