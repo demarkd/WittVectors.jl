@@ -41,7 +41,7 @@ function ghostbuster(ω::Vector{TT})::Vector{TT} where TT <: RingElement
 	res = ω[1:1]
 	R=parent(ω[1])
 	for i in 2:n
-		new=(ω[i] -pghost(res,i))÷R(i)
+		new=divexact((ω[i] -pghost(res,i)),R(i))
 		push!(res,new)
 	end
 	return res
@@ -53,7 +53,7 @@ function ghostbuster(ω::Vector{TT},S::Vector{Bool})::Vector{TT} where TT <: Rin
 	R=parent(ω[1])
 	for i in 2:n
 		if S[i]
-			new=(ω[i] -pghost(res,i))÷R(i)
+			new=divexact((ω[i] -pghost(res,i)),R(i))
 			push!(res,new)
 		else
 			push!(res,R(0))

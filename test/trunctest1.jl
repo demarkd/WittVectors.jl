@@ -1,7 +1,7 @@
 using Test
 include(joinpath(pathof(AbstractAlgebra), "..", "..", "test", "Rings-conformance-tests.jl"))
 
-S1 =QQ
+S1 =ZZ
 S2 =GF(7)
 S3 =GF(2)
 function test_elem(W::TruncatedBigWittRing{elem_type(S1)})
