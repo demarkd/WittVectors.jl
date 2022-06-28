@@ -93,7 +93,7 @@ function find_unit(w::WittVector{TT})::WittVector{TT} where TT <: RingElement
 	end
 	return W(X)
 end
-export find_unit
+#export find_unit
 function series_inv(x::TruncatedWittVector{TT})::TruncatedWittVector{TT} where TT <: RingElement
 	m=length(x.xcoords)
 	W=parent(x)
