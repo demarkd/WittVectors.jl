@@ -63,6 +63,8 @@ end
 	function find_unit(w::TruncatedWittVector{TT})::TruncatedWittVector{TT} where TT<: RingElement
 	function find_unit(w::WittVector{TT})::WittVector{TT} where TT <: RingElement
 Returns a Witt Vector which is modified from a copy of `w` to be a unit by examination of ghost coordinates. 
+This is still prototypical. 
+oh uh and definitely doesn't work for every ring.... 
 """
 function find_unit(w::TruncatedWittVector{TT})::TruncatedWittVector{TT} where TT <: RingElement
 	X=deepcopy(w.xcoords)
@@ -75,6 +77,7 @@ function find_unit(w::TruncatedWittVector{TT})::TruncatedWittVector{TT} where TT
 			ωi=WittVectors.ghostpoly(X,i)
 			if !(is_unit(ωi))
 				X[i]+=R(1)-ωi
+				println("$(ghostpoly(X,i))")
 			end
 		end
 	end

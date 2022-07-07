@@ -69,6 +69,18 @@ function ghost_vector(X::Vector{TT},S::Vector{Bool})::Vector{TT} where TT <: Rin
 	#return Threads.@threads [S[n] ? WittVectors.ghostpoly(X,n) : 0 for n in eachindex(X)]
 	return  [S[n] ? WittVectors.ghostpoly(X,n) : 0 for n in eachindex(X)]
 end
+function truncated_ghost_vector(X::Vector{TT},S::Vector{Bool})::Vector{TT} where TT <: RingElement
+	#return Threads.@threads [S[n] ? WittVectors.ghostpoly(X,n) : 0 for n in eachindex(X)]
+	Y=similar(X,1)
+	Y[1]=X[1]
+	for i in 2:length(X)
+		if S[i]
+			push!(Y,WittVectors.ghostpoly(X,i))
+		end
+	end
+	return Y
+	#return  [S[n] ? WittVectors.ghostpoly(X,n) : 0 for n in eachindex(X)]
+end
 function ghostvec_add(X1::Vector{TT},X2::Vector{TT})::Vector{TT} where TT <: RingElement
 	#W=parent(w1)
 	#X1=w1.xcoords
